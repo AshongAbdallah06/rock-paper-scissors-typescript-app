@@ -12,14 +12,13 @@ const useFunctions = () => {
 	const user: User = localStorage.getItem("user")
 		? JSON.parse(localStorage.getItem("user")!)
 		: null;
-	const bonus = localStorage.getItem("bonus") ? JSON.parse(localStorage.getItem("bonus")!) : null;
 
 	// Generate the computer's move
 	type SetMoves = (move: string | null) => void;
-	const generateComputerMove = (setComputerMove: SetMoves) => {
-		const randomNumber = Math.floor(Math.random() * (bonus ? 5 : 3));
+	const generateComputerMove = (setComputerMove: SetMoves, bonusState: boolean | "setting") => {
+		const randomNumber = Math.floor(Math.random() * (bonusState ? 5 : 3));
 
-		if (!bonus) {
+		if (!bonusState) {
 			if (randomNumber === 0) {
 				setComputerMove("r");
 			} else if (randomNumber === 1) {
@@ -27,7 +26,7 @@ const useFunctions = () => {
 			} else {
 				setComputerMove("s");
 			}
-		} else if (bonus) {
+		} else if (bonusState) {
 			if (randomNumber === 0) {
 				setComputerMove("r");
 			} else if (randomNumber === 1) {
@@ -54,9 +53,11 @@ const useFunctions = () => {
 		setPlayerMoveImage: SetImages,
 		setComputerMoveImage: SetImages,
 		result: string | null,
-		setResult: (result: string | null) => void
+		setResult: (result: string | null) => void,
+		bonusState: boolean | "setting"
 	) => {
-		if (!bonus) {
+		if (!bonusState) {
+			console.log("bonusState: ", bonusState);
 			switch (playerMove) {
 				case "r":
 					setPlayerMoveImage(rockIcon);
@@ -101,7 +102,9 @@ const useFunctions = () => {
 					setResult(result);
 					break;
 			}
-		} else if (bonus) {
+		} else if (bonusState) {
+			console.log("bonusState: ", bonusState);
+
 			switch (playerMove) {
 				case "r":
 					setPlayerMoveImage(rockIcon);
@@ -241,9 +244,9 @@ const useFunctions = () => {
 	};
 
 	// Join room
-	const joinRoom = (socket: Socket, roomID: string) => {
+	const joinRoom = (socket: Socket, roomID: string, bonusState: boolean | "setting") => {
 		socket.emit("join-room", {
-			id: `${roomID}-${bonus ? "bonus" : "normal"}`,
+			id: `${roomID}-${bonusState ? "bonus" : "normal"}`,
 			username: user?.username,
 		});
 
@@ -262,7 +265,7 @@ const useFunctions = () => {
 
 	const getAllScores = (socket: Socket, setScores: (value: Scores) => void) => {
 		socket.emit("getAllScores");
-		socket.on("getAllScores", (scores) => {
+		socket.on("getAllScores", (scores: Scores) => {
 			setScores(scores);
 		});
 
@@ -293,8 +296,8 @@ const useFunctions = () => {
 	const getAllDualPlayerStats = async (username: string) => {
 		try {
 			const response = await Axios.get(
-				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/dual-player/${username}`
-				`http://localhost:4001/api/user/stats/dual-player/${username}`
+				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/dual-player/${username}`
+				// `http://localhost:4001/api/user/stats/dual-player/${username}`
 			);
 
 			const data = response.data;

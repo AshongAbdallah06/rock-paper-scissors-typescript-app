@@ -32,8 +32,8 @@ export interface ContextType {
 	isRulesModalShow: boolean;
 	setIsRulesModalShow: (value: boolean) => void;
 	moveOnclick: (move: string) => void;
-	moveAck: { msg: string } | null | "";
-	setMoveAck: (value: { msg: string } | null | "") => void;
+	moveAck: string | null | "";
+	setMoveAck: (value: string | null | "") => void;
 	leftRoom: string | null;
 	setLeftRoom: (value: string) => void;
 	currentUserStats: CurrentUserStats | null;
@@ -49,4 +49,6 @@ export interface ContextType {
 	p1Username: string | null;
 	p2Username: string | null;
 	user: User;
+	bonusState: boolean | "setting";
+	setBonusState: (value: boolean | "setting") => void;
 }

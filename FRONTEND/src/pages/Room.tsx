@@ -6,8 +6,16 @@ import copyIcon from "../images/copy-regular.svg";
 import CopiedAlert from "../components/CopiedAlert";
 
 const PlayerSelection = () => {
-	const { roomID, setRoomID, setRoomIsSelected, setIsOnePlayer, isOnePlayer, socket, user } =
-		useCheckContext();
+	const {
+		roomID,
+		setRoomID,
+		setRoomIsSelected,
+		setIsOnePlayer,
+		bonusState,
+		isOnePlayer,
+		socket,
+		user,
+	} = useCheckContext();
 	const { joinRoom } = useFunctions();
 
 	/**todo: create remember id functionality 
@@ -58,7 +66,7 @@ const PlayerSelection = () => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				roomID && joinRoom(socket, roomID);
+				roomID && joinRoom(socket, roomID, bonusState);
 				roomID && setRoomIsSelected(true);
 			}}
 		>
@@ -95,7 +103,7 @@ const PlayerSelection = () => {
 					className="btn join"
 					onClick={() => {
 						if (roomID) {
-							joinRoom(socket, roomID);
+							joinRoom(socket, roomID, bonusState);
 							setRoomIsSelected(true);
 							setIsOnePlayer(false);
 							socket.emit("active-rooms");

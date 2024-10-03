@@ -15,12 +15,8 @@ import Lizard from "./components/bonus/Lizard";
 import Spock from "./components/bonus/Spock";
 import Loader from "./components/Loader";
 
-interface Props {
-	bonusState: boolean;
-}
-
-const GameBoard: FC<Props> = ({ bonusState }) => {
-	const { playerMove, computerMove, isOnePlayer } = useCheckContext();
+const GameBoard: FC = () => {
+	const { playerMove, computerMove, isOnePlayer, bonusState } = useCheckContext();
 	const [showAfterChoice, setShowAfterChoice] = useState<boolean | null>(null);
 
 	useEffect(() => {

@@ -28,12 +28,18 @@ const Footer: FC<Props> = ({
 	setSidebarIsShowing,
 	chatIsShowing,
 	setChatIsShowing,
-	bonusState,
-	setBonusState,
 	setShowDualPlayerStats,
 }) => {
-	const { isOnePlayer, socket, setRoomIsSelected, setRoomID, setIsOnePlayer, setPlayerIsChosen } =
-		useCheckContext();
+	const {
+		isOnePlayer,
+		socket,
+		setRoomIsSelected,
+		setRoomID,
+		setIsOnePlayer,
+		setPlayerIsChosen,
+		bonusState,
+		setBonusState,
+	} = useCheckContext();
 	const { leaveRoom, logout } = useFunctions();
 
 	return (
@@ -149,20 +155,7 @@ const Footer: FC<Props> = ({
 							localStorage.setItem("bonus", JSON.stringify(false));
 							setBonusState("setting");
 							setTimeout(() => {
-								setBonusState(() => {
-									const storedBonusState = localStorage.getItem("bonus");
-									try {
-										return storedBonusState
-											? JSON.parse(storedBonusState)
-											: null;
-									} catch (error) {
-										console.error(
-											"Error parsing bonus state stats from localStorage:",
-											error
-										);
-										return null; // Return null if parsing fails
-									}
-								});
+								setBonusState(false);
 							}, 2000);
 							setSidebarIsShowing(false);
 						}}
@@ -185,20 +178,7 @@ const Footer: FC<Props> = ({
 							localStorage.setItem("bonus", JSON.stringify(true));
 							setBonusState("setting");
 							setTimeout(() => {
-								setBonusState(() => {
-									const storedBonusState = localStorage.getItem("bonus");
-									try {
-										return storedBonusState
-											? JSON.parse(storedBonusState)
-											: null;
-									} catch (error) {
-										console.error(
-											"Error parsing bonus state stats from localStorage:",
-											error
-										);
-										return null; // Return null if parsing fails
-									}
-								});
+								setBonusState(true);
 							}, 2000);
 							setSidebarIsShowing(false);
 						}}

@@ -22,8 +22,8 @@ const Profile = () => {
 	const getUserProfiles = async (username: string) => {
 		try {
 			const res = await Axios.post(
-				// "https://rock-paper-scissors-app-iybf.onrender.com/api/user/profiles",
-				"http://localhost:4001/api/user/profiles",
+				"https://rock-paper-scissors-app-iybf.onrender.com/api/user/profiles",
+				// "http://localhost:4001/api/user/profiles",
 				{ username }
 			);
 			const opponentData = res.data;

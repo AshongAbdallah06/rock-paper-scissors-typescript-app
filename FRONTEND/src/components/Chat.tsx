@@ -12,7 +12,7 @@ type Message = { username: string; textMessage: string };
 const Chat: FC<Props> = ({ setChatIsShowing }) => {
 	const { socket, roomID, user } = useCheckContext();
 
-	const [textMessage, setTextMessage] = useState("");
+	const [textMessage, setTextMessage] = useState<string>("");
 	const [messages, setMessages] = useState(() => {
 		const storedMessages = localStorage.getItem(`room-${roomID}-${user.username}-messages`);
 		try {

@@ -57,7 +57,7 @@ const Home = () => {
 		});
 
 		if (isOnePlayer) {
-			joinRoom(socket, user.username);
+			joinRoom(socket, user.username, bonusState);
 		}
 
 		if (!localStorage.getItem("bonus")) {
@@ -86,14 +86,14 @@ const Home = () => {
 						setSidebarIsShowing={setSidebarIsShowing}
 					/>
 
-					{!isOnePlayer && moveAck && <p className="copied-alert">{moveAck.msg}</p>}
+					{!isOnePlayer && moveAck && <p className="copied-alert">{moveAck}</p>}
 					{!isOnePlayer && leftRoom && showWhoLeft && (
 						<p className="copied-alert">{leftRoom}</p>
 					)}
 
 					<ScoreBoard />
 
-					<GameBoard bonusState={bonusState} />
+					<GameBoard />
 
 					{!bonusState ? <Dialog /> : <BonusDialog />}
 					{chatIsShowing ? <Chat setChatIsShowing={setChatIsShowing} /> : ""}

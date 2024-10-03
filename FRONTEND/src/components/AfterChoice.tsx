@@ -22,8 +22,6 @@ const AfterChoice: FC<Props> = ({ bonusState }) => {
 		user,
 	} = useCheckContext();
 
-	// Get usernames
-
 	return (
 		<div className="Desktop-step2">
 			<div className="you-picked">

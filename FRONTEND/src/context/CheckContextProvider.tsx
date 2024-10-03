@@ -14,8 +14,8 @@ import {
 } from "../Types";
 import { ContextType, Props } from "../Interfaces";
 
-// const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
-const socket = io("http://localhost:4001");
+const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
+// const socket = io("http://localhost:4001");
 
 export const CheckContext = createContext<ContextType | undefined>(undefined);
 
@@ -78,7 +78,7 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	const [playerMove, setPlayerMove] = useState<string | null>(null);
 	const [computerMove, setComputerMove] = useState<string | null>(null);
 	const [result, setResult] = useState<string | null>(null);
-	const [moveAck, setMoveAck] = useState<{ msg: string } | null | "">(null);
+	const [moveAck, setMoveAck] = useState<string | null | "">(null);
 	const [roomID, setRoomID] = useState<string | null>(null);
 
 	const usernames: Usernames = (() => {
@@ -132,8 +132,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 			setGameState(newGameState);
 		});
 
-		socket.on("move-made", (message) => {
-			setMoveAck(message);
+		socket.on("move-made", ({ msg }: { msg: string }) => {
+			setMoveAck(msg);
 			setTimeout(() => {
 				setMoveAck("");
 			}, 3000);
@@ -141,16 +141,12 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 
 		socket.emit("getDualPlayerStats");
 
-		socket.on("getDualPlayerStats", (data) => {
-			setDualPlayerStats(data[0]);
-		});
-
-		socket.on("getDualPlayerStats", (data) => {
+		socket.on("getDualPlayerStats", (data: DualPlayerStats[]) => {
 			setDualPlayerStats(data[0]);
 		});
 
 		// Handle username updates
-		socket.on("updateUsernames", (data) => {
+		socket.on("updateUsernames", (data: Usernames) => {
 			!data?.p1Username && setP1Username(null);
 
 			if (data?.p1Username && !data?.p2Username) {
@@ -175,6 +171,20 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 		};
 	}, [socket]);
 
+	const bonus = () => {
+		const storedBonus = localStorage.getItem("bonus");
+		try {
+			return storedBonus ? JSON.parse(storedBonus) : null;
+		} catch (error) {
+			console.error("Error parsing selected user stats from localStorage:", error);
+			return null; // Return null if parsing fails
+		}
+	};
+
+	const [bonusState, setBonusState] = useState<boolean | "setting">(
+		JSON.parse(localStorage.getItem("bonus") || "")
+	);
+
 	useEffect(() => {
 		if (isOnePlayer) {
 			checkOptions(
@@ -183,7 +193,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 				setPlayerMoveImage,
 				setComputerMoveImage,
 				result,
-				setResult
+				setResult,
+				bonusState
 			);
 		}
 	}, [playerMove, computerMove, isOnePlayer, result]);
@@ -206,15 +217,15 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 			socket.emit("move", { username: user?.username, move });
 		} else {
 			setPlayerMove(move);
-			generateComputerMove(setComputerMove);
+			generateComputerMove(setComputerMove, bonusState);
 		}
 	};
 
 	const getUserStats = async (username: string) => {
 		try {
 			const res = await Axios.get(
-				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/${username}`
-				`http://localhost:4001/api/user/stats/${username}`
+				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/${username}`
+				// `http://localhost:4001/api/user/stats/${username}`
 			);
 
 			const data: GetUserStatsData = res?.data[0] || {};
@@ -257,8 +268,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	const getPlayerStats = async (p1Username: string, p2Username: string) => {
 		try {
 			const res = await Axios.post(
-				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats`,
-				`http://localhost:4001/api/user/stats`,
+				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats`,
+				// `http://localhost:4001/api/user/stats`,
 				{
 					p1Username,
 					p2Username,
@@ -352,7 +363,7 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	}, [dualPlayerStats]);
 
 	useEffect(() => {
-		socket.on("clearMoves", (newGameState) => {
+		socket.on("clearMoves", (newGameState: GameState) => {
 			setGameState(newGameState);
 		});
 
@@ -368,8 +379,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	const authorize = async () => {
 		try {
 			await Axios.get(
-				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/${user?.username}`,
-				`http://localhost:4001/api/user/${user?.username}`,
+				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/${user?.username}`,
+				// `http://localhost:4001/api/user/${user?.username}`,
 				{
 					headers: { Authorization: `Bearer ${user.token ? user.token : token}` },
 				}
@@ -431,6 +442,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 				p1Username,
 				p2Username,
 				user,
+				bonusState,
+				setBonusState,
 			}}
 		>
 			{children}

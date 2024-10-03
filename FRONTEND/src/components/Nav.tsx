@@ -8,14 +8,18 @@ interface Props {
 }
 
 const Nav: FC<Props> = ({ setSidebarIsShowing }) => {
-	const { roomID, socket, setLeftRoom } = useCheckContext();
+	const { roomID, socket, setLeftRoom, leftRoom } = useCheckContext();
 	const [navIsShowing, setNavIsShowing] = useState(false);
 
 	useEffect(() => {
 		socket.on("leaveRoom", ({ msg }: { msg: string }) => {
 			setLeftRoom(msg);
+
+			setTimeout(() => {
+				setLeftRoom("");
+			}, 2000);
 		});
-	}, [roomID, socket]);
+	}, [roomID, socket, leftRoom]);
 
 	return (
 		<nav className="nav">
