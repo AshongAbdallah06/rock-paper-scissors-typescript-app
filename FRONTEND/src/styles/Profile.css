@@ -1,0 +1,293 @@
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap");
+/* Profile page styles for the game */
+a {
+	text-decoration: none;
+}
+
+.image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	position: relative;
+}
+form.edit {
+	padding: 0;
+}
+.profile-header.edit {
+	margin: 0;
+	background-color: transparent;
+	margin-top: 1rem;
+}
+
+input[type="file"] {
+	background-color: gray;
+	opacity: 0;
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	border-radius: 100%;
+	top: 0;
+	cursor: pointer;
+	z-index: 1;
+}
+.profile-container {
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #f5f5f5;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+.profile-header {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.profile-pic {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid #f39c12;
+	margin-bottom: 15px;
+}
+
+.profile-name {
+	font-size: 28px;
+	margin: 0;
+	font-weight: normal;
+	font-family: "Heebo", sans-serif;
+	text-align: center;
+	margin-bottom: 20px;
+	color: #2c3e50;
+}
+
+.age {
+	font-weight: bold;
+	font-family: "Heebo", sans-serif;
+}
+
+.profile-location {
+	font-size: 16px;
+	color: #7f8c8d;
+	margin: 5px 0;
+}
+
+.profile-bio {
+	font-size: 18px;
+	color: #2c3e50;
+	margin-bottom: 20px;
+	padding: 0 4rem;
+}
+
+.profile-stats {
+	display: flex;
+	justify-content: space-around;
+	font-family: "Heebo", sans-serif;
+}
+
+.stat-item.two-player {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.stat-item h3 {
+	font-size: 22px;
+	margin: 0;
+	color: #2c3e50;
+}
+
+.stat-item img {
+	height: 2rem;
+	width: 2rem;
+	padding-top: 0.3rem;
+}
+
+.stat-item p {
+	font-size: 14px;
+	color: #95a5a6;
+	font-family: "Heebo", sans-serif;
+	margin: 5px 0;
+}
+
+.profile-actions {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.edit-btn,
+.challenge-btn {
+	padding: 10px 20px;
+	font-size: 16px;
+	border: none;
+	border-radius: 5px;
+	font-family: "Heebo", sans-serif;
+	cursor: pointer;
+}
+
+.edit-btn {
+	background-color: #f39c12;
+	color: white;
+}
+
+.challenge-btn {
+	background-color: #e74c3c;
+	color: white;
+}
+
+.edit-btn:hover,
+.challenge-btn:hover {
+	opacity: 0.8;
+}
+
+/* Edit profile page styles */
+.edit-profile-container {
+	width: 100%;
+	max-width: 500px;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px;
+}
+.edit-profile-container h1 {
+	margin-bottom: 0;
+	color: #000;
+}
+
+.edit-profile-form {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+}
+
+.form-group {
+	margin-bottom: 20px;
+	margin-top: 0;
+	width: 100%;
+}
+.form-group.shared {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+}
+.form-group-split {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+.form-group label {
+	font-size: 16px;
+	color: white;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.form-group input {
+	width: 100%;
+	min-width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #bdc3c7;
+	border-radius: 5px;
+}
+.form-group textarea {
+	max-height: 12rem;
+	min-height: 2.5rem;
+	max-width: 500px;
+	min-width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #bdc3c7;
+	border-radius: 5px;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+	outline: none;
+	border-color: #3498db;
+}
+.edit-profile-container .buttons {
+	width: 100%;
+	flex-direction: column;
+}
+.save-btn {
+	background-color: #3498db;
+}
+.back-btn {
+	background-color: rgb(255, 93, 93);
+	text-align: left;
+	margin-bottom: 1rem;
+}
+.join {
+	text-align: center;
+}
+.save-btn,
+.join:hover {
+	background-color: #2980b9;
+}
+
+/* Two Player */
+.profile-container.two-player {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 50%;
+	min-width: 30rem;
+	flex-direction: column;
+	/* min-width: 15rem; */
+}
+
+.profile-container.two-player .top {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	border-bottom: 1px solid #e1e1e1;
+	width: 100%;
+}
+
+.profile-container.two-player .bottom {
+	padding-top: 1rem;
+}
+
+.divider {
+	width: 1px;
+	height: 100%;
+	background-color: #e1e1e1;
+}
+
+.image-overlay {
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	cursor: pointer;
+	flex-direction: column;
+	top: 0;
+}
+
+.image-container:hover .image-overlay {
+	opacity: 1;
+}
+.image-icon {
+	height: 2.5rem;
+	width: 2.5rem;
+}

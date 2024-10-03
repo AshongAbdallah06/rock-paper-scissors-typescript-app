@@ -1,0 +1,183 @@
+.selection {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	text-align: center;
+}
+.selection h1 {
+	font-size: 0.9rem;
+}
+.input-cont {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+	transition: width 1s, height 1s 0.6s;
+	cursor: auto;
+	border-bottom: 1px solid gray;
+	flex-direction: column;
+	text-align: center;
+	position: relative;
+}
+.copy-icon {
+	height: 1.2rem;
+	width: 1.2rem;
+	transition: all 0.15s;
+	position: absolute;
+	bottom: 5px;
+	cursor: pointer;
+	right: 0rem;
+}
+.copy-icon:hover {
+	height: 1.2rem;
+	width: 1.2rem;
+}
+.input-cont p {
+	margin-top: 1rem;
+}
+form .room {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+.room-input::placeholder {
+	margin-bottom: 10rem;
+}
+.room-input {
+	width: 3rem;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	color: white;
+	font-size: 1rem;
+	text-align: center;
+	transition: border-bottom 1s;
+	outline: none;
+	height: 0;
+	transition: width 0.2s, height 0.2s 0.1s;
+	width: 100%;
+}
+
+.input-cont:hover .room-input {
+	width: 100%;
+	height: 2.4rem;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	border-top: 1px solid white;
+}
+
+.remember {
+	margin-top: 1rem;
+	display: flex;
+}
+.remember span {
+	margin-left: 0.5rem;
+	font-size: 0.8rem;
+}
+.mode-links {
+	margin-top: 2rem;
+}
+
+.mode-links a {
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1rem;
+	padding: 0.6rem;
+	color: hsl(237, 49%, 15%);
+	background-color: white;
+	font-weight: bold;
+	border-radius: 0.3rem;
+	border: none;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+.mode-links a:last-child {
+	margin-left: 1rem;
+}
+.mode-links p {
+	background-color: transparent;
+	color: white;
+	text-decoration: underline;
+}
+.mode-links a:hover {
+	background-color: hsl(39, 89%, 49%);
+	color: white;
+	padding: 0.7rem;
+}
+.join {
+	background-color: #3498db;
+}
+.or {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 1.5rem;
+	width: 100%;
+	color: rgb(211, 211, 211);
+}
+
+.or::before,
+.or::after {
+	content: "";
+	display: block;
+	background-color: rgb(211, 211, 211);
+	height: 1px;
+	width: 70%;
+}
+
+.or::before {
+	margin-right: 0.5rem;
+}
+.or::after {
+	margin-left: 0.5rem;
+}
+
+.link-item {
+	color: white;
+	font-weight: bold;
+	margin: 0.5rem;
+	border: none;
+	font-size: 1rem;
+	cursor: pointer;
+	text-align: center;
+	display: inline-block;
+	transition: all 0.15s;
+}
+.link-item:hover {
+	color: hsl(40, 84%, 53%);
+	transform: scale(1.1);
+}
+
+.remember {
+	margin-top: 1rem;
+	display: flex;
+}
+.remember span {
+	margin-left: 0.5rem;
+	font-size: 0.8rem;
+}
+
+.room-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	background-color: hsl(237, 49%, 15%);
+	border-radius: 3px;
+	width: 15rem;
+	flex-direction: column;
+}
+.room-container div {
+	padding: 1rem;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #464646;
+}
+.room-container button {
+	padding: 0.4rem 1rem;
+	cursor: pointer;
+}

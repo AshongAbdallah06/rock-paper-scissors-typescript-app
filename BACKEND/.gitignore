@@ -1,0 +1,4 @@
+/node_modules
+.env
+ERD.png
+db.sql

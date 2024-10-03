@@ -1,0 +1,55 @@
+/* Form */
+form {
+	color: white;
+	min-width: 20rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+}
+form h1 {
+	margin-bottom: 2rem;
+}
+
+form .group {
+	display: flex;
+	flex-direction: column;
+	margin: 1rem 0;
+	width: 100%;
+}
+form .links {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	color: white;
+	font-weight: 700;
+	font-size: 1.3rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+form .links a:first-child {
+	margin-right: 1rem;
+}
+
+.login-btn,
+.signup-btn {
+	padding: 12px;
+	font-size: 1.2rem;
+	background-color: #3498db;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+.login-btn:hover,
+.signup-btn:hover {
+	background-color: #2980b9;
+}
