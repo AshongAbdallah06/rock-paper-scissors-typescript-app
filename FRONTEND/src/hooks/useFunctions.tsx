@@ -57,7 +57,6 @@ const useFunctions = () => {
 		bonusState: boolean | "setting"
 	) => {
 		if (!bonusState) {
-			console.log("bonusState: ", bonusState);
 			switch (playerMove) {
 				case "r":
 					setPlayerMoveImage(rockIcon);
@@ -103,8 +102,6 @@ const useFunctions = () => {
 					break;
 			}
 		} else if (bonusState) {
-			console.log("bonusState: ", bonusState);
-
 			switch (playerMove) {
 				case "r":
 					setPlayerMoveImage(rockIcon);
