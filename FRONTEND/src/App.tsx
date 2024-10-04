@@ -38,7 +38,7 @@ function PrivateRoute({
 	userExists: boolean | undefined;
 	children: ReactNode;
 }) {
-	return userExists ? children : <Navigate to="/login" />;
+	return userExists ? <>{children}</> : <Navigate to="/login" />;
 }
 
 function PublicRoute({
@@ -48,7 +48,7 @@ function PublicRoute({
 	userExists: boolean | undefined;
 	children: ReactNode;
 }) {
-	return userExists ? <Navigate to="/" /> : children;
+	return userExists ? <Navigate to="/" /> : <>{children}</>;
 }
 
 interface LoadingProps {
@@ -77,7 +77,7 @@ const Loading: FC<LoadingProps> = ({ isRendered, setIsRendered, children }) => {
 	}, [location.pathname]);
 
 	return isRendered ? (
-		children
+		<>{children}</>
 	) : (
 		<>
 			<Logo />
@@ -98,7 +98,7 @@ const LoadingApp: FC<LoadingAppProps> = ({ isAppRendered, setIsAppRendered, chil
 	}, []);
 
 	return isAppRendered ? (
-		children
+		<>{children}</>
 	) : (
 		<>
 			<Logo />
