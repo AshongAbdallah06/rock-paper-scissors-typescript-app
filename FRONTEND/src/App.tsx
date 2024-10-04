@@ -1,18 +1,7 @@
-import "./styles/Animation.css";
-import "./styles/Home.css";
-import "./styles/Leaderboard.css";
-import "./styles/Profile.css";
-import "./styles/Help.css";
-import "./styles/Mobile.css";
-import "./styles/Chat.css";
-import "./styles/Sidebar.css";
-import "./styles/Room.css";
-import "./styles/Form.css";
-import { FC, useEffect, useState } from "react";
-import useCheckContext from "./hooks/useCheckContext";
+import { FC, useEffect, useState, ReactNode } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import useCheckContext from "./hooks/useCheckContext";
 import Login from "./pages/Login";
-import { ReactNode } from "react";
 import Signup from "./pages/Signup";
 import PlayerSelection from "./pages/PlayerSelection";
 import Room from "./pages/Room";
@@ -28,6 +17,16 @@ import Axios from "axios";
 import Contact from "./pages/Contact";
 import AvailableRooms from "./components/AvailableRooms";
 import EditProfile from "./pages/EditProfile";
+import "./styles/Animation.css";
+import "./styles/Home.css";
+import "./styles/Leaderboard.css";
+import "./styles/Profile.css";
+import "./styles/Help.css";
+import "./styles/Mobile.css";
+import "./styles/Chat.css";
+import "./styles/Sidebar.css";
+import "./styles/Room.css";
+import "./styles/Form.css";
 
 // export const GameContext = createContext();
 
