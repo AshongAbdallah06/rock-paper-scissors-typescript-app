@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const NotFound = () => {
+const NotFound = (): React.ReactElement | null => {
 	const [renderUnknownRoutes, setRenderUnknownRoutes] = useState<boolean>(false);
 
 	useEffect(() => {
-		setRenderUnknownRoutes(false);
 		const timer = setTimeout(() => {
 			setRenderUnknownRoutes(true);
 		}, 100);
@@ -13,19 +12,18 @@ const NotFound = () => {
 		return () => clearTimeout(timer);
 	}, []);
 
-	return (
-		renderUnknownRoutes && (
-			<div style={{ color: "white", textAlign: "center" }}>
-				<h1>Page not found</h1>
-				<Link
-					to="/select-player-mode"
-					style={{ color: "white" }}
-				>
-					Select Player Mode
-				</Link>
-			</div>
-		)
-	);
+	// Always return a valid JSX element or null
+	return renderUnknownRoutes ? (
+		<div style={{ color: "white", textAlign: "center" }}>
+			<h1>Page not found</h1>
+			<Link
+				to="/select-player-mode"
+				style={{ color: "white" }}
+			>
+				Select Player Mode
+			</Link>
+		</div>
+	) : null; // Return null instead of false
 };
 
 export default NotFound;
