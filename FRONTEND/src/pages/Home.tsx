@@ -9,11 +9,23 @@ import Nav from "../components/Nav";
 import useFunctions from "../hooks/useFunctions";
 import Footer from "../components/Footer";
 import DualPlayerStats from "../components/DualPlayerStats";
+import AlertComponent from "../components/AlertComponent";
+import { MessageType } from "../Types";
 
 const Home = () => {
 	const [chatIsShowing, setChatIsShowing] = useState(false);
-	const { isOnePlayer, moveAck, leftRoom, socket, user, setIsRulesModalShow } = useCheckContext();
-	const { joinRoom } = useFunctions();
+	const {
+		isOnePlayer,
+		moveAck,
+		leftRoom,
+		socket,
+		user,
+		setIsRulesModalShow,
+		alertCounter,
+		setAlertCounter,
+		roomID,
+	} = useCheckContext();
+	const { joinRoom, getStorageItem } = useFunctions();
 
 	useEffect(() => {
 		localStorage.setItem("player-mode", JSON.stringify(isOnePlayer ? "single" : "dual"));
@@ -30,19 +42,18 @@ const Home = () => {
 		}, 2000);
 	}, [hasLeftRoom]);
 
-	const bonus = () => {
-		const storedBonus = localStorage.getItem("bonus");
-		try {
-			return storedBonus ? JSON.parse(storedBonus) : null;
-		} catch (error) {
-			console.error("Error parsing selected user stats from localStorage:", error);
-			return null; // Return null if parsing fails
-		}
-	};
+	const bonus = getStorageItem("bonus", null);
 
-	const [renderRoutes, setRenderRoutes] = useState(false);
+	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 
 	useEffect(() => {
+		if (alertCounter === 0) {
+			setAlertCounter(alertCounter + 1);
+			alert(
+				"Server takes a little time to respond; about a 50s to 1min. So you may want to reload the page to refetch score accurately."
+			);
+		}
+
 		setRenderRoutes(false);
 		const timer = setTimeout(() => {
 			setRenderRoutes(true);
@@ -70,6 +81,41 @@ const Home = () => {
 		};
 	}, []);
 
+	const [messages, setMessages] = useState(
+		getStorageItem(`room-${roomID}-${user.username}-messages`, [])
+	);
+
+	useEffect(() => {
+		localStorage.setItem(`room-${roomID}-${user.username}-messages`, JSON.stringify(messages));
+	}, [messages]);
+
+	useEffect(() => {
+		socket.on("message", (message: MessageType) => {
+			setMessages((prevMessages: MessageType[]) => [...prevMessages, message]);
+			setShowMessageAlert(true);
+
+			setTimeout(() => {
+				setShowMessageAlert(false);
+			}, 5000);
+		});
+
+		// Delete all messages
+		socket.on("deleteMessage", () => {
+			localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
+			setMessages([]);
+		});
+
+		return () => {
+			socket.off("message");
+		};
+	}, [socket]);
+
+	const [showMessageAlert, setShowMessageAlert] = useState<boolean>(false);
+
+	useEffect(() => {
+		localStorage.setItem("alertCounter", JSON.stringify(alertCounter));
+	}, [alertCounter]);
+
 	const [sidebarIsShowing, setSidebarIsShowing] = useState<boolean>(false);
 	const [bonusState, setBonusState] = useState<boolean>(!bonus ? false : true);
 	const [showDualPlayerStats, setShowDualPlayerStats] = useState<boolean>(false);
@@ -85,18 +131,31 @@ const Home = () => {
 						sidebarIsShowing={sidebarIsShowing}
 						setSidebarIsShowing={setSidebarIsShowing}
 					/>
-
-					{!isOnePlayer && moveAck && <p className="copied-alert">{moveAck}</p>}
-					{!isOnePlayer && leftRoom && showWhoLeft && (
-						<p className="copied-alert">{leftRoom}</p>
+					{!isOnePlayer && showMessageAlert && (
+						<AlertComponent
+							message="New message. Click to view message."
+							setChatIsShowing={setChatIsShowing}
+							messages={messages}
+						/>
 					)}
+
+					{!isOnePlayer && moveAck && <p className="alert">{moveAck}</p>}
+					{!isOnePlayer && leftRoom && showWhoLeft && <p className="alert">{leftRoom}</p>}
 
 					<ScoreBoard />
 
 					<GameBoard />
 
 					{!bonusState ? <Dialog /> : <BonusDialog />}
-					{chatIsShowing ? <Chat setChatIsShowing={setChatIsShowing} /> : ""}
+					{chatIsShowing ? (
+						<Chat
+							setMessages={setMessages}
+							setChatIsShowing={setChatIsShowing}
+							messages={messages}
+						/>
+					) : (
+						""
+					)}
 
 					{sidebarIsShowing && (
 						<Footer

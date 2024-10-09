@@ -320,6 +320,16 @@ const useFunctions = () => {
 		}
 	};
 
+	const getStorageItem = (itemName: string, returnItem: any) => {
+		const storedItem = localStorage.getItem(itemName);
+		try {
+			return storedItem ? JSON.parse(storedItem) : returnItem;
+		} catch (error) {
+			console.error("Error parsing opt changes from localStorage:", error);
+			return null; // Return null if parsing fails
+		}
+	};
+
 	return {
 		generateComputerMove,
 		checkPlayersMoves,
@@ -338,6 +348,7 @@ const useFunctions = () => {
 		allLosses,
 		allTies,
 		getAllDualPlayerStats,
+		getStorageItem,
 	};
 };
 

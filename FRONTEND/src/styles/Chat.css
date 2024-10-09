@@ -89,10 +89,19 @@ textarea {
 .person {
 	word-wrap: break-word;
 	margin-bottom: 5px;
+	padding-left: 1rem;
+}
+
+.you {
+	border-left: 3px solid hsl(349, 71%, 52%);
+}
+
+.other {
+	border-left: 3px solid hsl(39, 89%, 49%);
 }
 
 .messages {
-	margin: 1rem;
+	margin: 1rem 0;
 	max-height: 480px;
 	overflow-y: scroll;
 }

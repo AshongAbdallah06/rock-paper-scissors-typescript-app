@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Axios from "axios";
 import "../styles/Form.css";
 
-const Login = () => {
+const Signup = () => {
 	const Schema = yup.object().shape({
 		email: yup
 			.string()
@@ -139,4 +139,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default Signup;

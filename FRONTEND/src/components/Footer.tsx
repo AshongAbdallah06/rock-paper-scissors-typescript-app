@@ -39,6 +39,8 @@ const Footer: FC<Props> = ({
 		setPlayerIsChosen,
 		bonusState,
 		setBonusState,
+		p1Username,
+		p2Username,
 	} = useCheckContext();
 	const { leaveRoom, logout } = useFunctions();
 
@@ -148,7 +150,7 @@ const Footer: FC<Props> = ({
 			</>
 
 			<>
-				{bonusState && (
+				{bonusState && ((!p1Username && p2Username) || (p1Username && !p2Username)) && (
 					<Link
 						to="/"
 						onClick={() => {
@@ -170,7 +172,7 @@ const Footer: FC<Props> = ({
 					</Link>
 				)}
 
-				{!bonusState && (
+				{!bonusState && ((!p1Username && p2Username) || (p1Username && !p2Username)) && (
 					<Link
 						to="/"
 						className="link"

@@ -63,3 +63,4 @@ export type GetUserStatsData = {
 	wins: number;
 	username: string;
 };
+export type MessageType = { username: string; textMessage: string };

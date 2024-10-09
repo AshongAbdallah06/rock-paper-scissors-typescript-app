@@ -239,9 +239,7 @@ io.on("connect", (socket) => {
 		}
 	});
 
-	socket.on("message", async (message) => {
-		// Broadcast message to all clients
-		const { username, textMessage } = message;
+	socket.on("message", async ({ username, textMessage }) => {
 		io.to(roomId).emit("message", { username, textMessage });
 	});
 

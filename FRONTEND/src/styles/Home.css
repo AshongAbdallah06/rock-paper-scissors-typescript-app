@@ -42,7 +42,9 @@ ul {
 	animation-delay: 1s;
 }
 
-.copied-alert {
+.alert,
+.message-alert {
+	cursor: pointer;
 	color: white;
 	background: hsl(237, 49%, 15%);
 	text-align: center;
@@ -588,10 +590,27 @@ img[alt="scissors"] {
 .no-display {
 	grid-template-columns: 1fr;
 	padding: 2rem;
+	color: white;
+	text-align: center;
 }
 .no-display span {
 	margin-top: 1rem;
 	font-weight: 200;
 	font-size: 1.1rem;
 	letter-spacing: 0.1rem;
+}
+
+.not-found {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	color: white;
+	text-align: center;
+}
+
+.not-found-btn {
+	background-color: hsl(189, 87%, 29%);
+	margin-top: 1rem;
+	font-weight: bold;
 }

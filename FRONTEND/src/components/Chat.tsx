@@ -5,39 +5,16 @@ import trashCan from "../images/trash-outline.svg";
 
 interface Props {
 	setChatIsShowing: (value: boolean) => void;
+	messages: Message[];
+	setMessages: (value: Message[]) => void;
 }
 
 type Message = { username: string; textMessage: string };
 
-const Chat: FC<Props> = ({ setChatIsShowing }) => {
+const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 	const { socket, roomID, user } = useCheckContext();
 
 	const [textMessage, setTextMessage] = useState<string>("");
-	const [messages, setMessages] = useState(() => {
-		const storedMessages = localStorage.getItem(`room-${roomID}-${user.username}-messages`);
-		try {
-			return storedMessages ? JSON.parse(storedMessages) : [];
-		} catch (error) {
-			console.error("Error parsing selected user stats from localStorage:", error);
-			return null; // Return null if parsing fails
-		}
-	});
-
-	useEffect(() => {
-		socket.on("message", (message: Message) => {
-			setMessages((prevMessages: Message[]) => [...prevMessages, message]);
-		});
-
-		// Delete all messages
-		socket.on("deleteMessage", () => {
-			localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
-			setMessages([]);
-		});
-
-		return () => {
-			socket.off("message");
-		};
-	}, [socket]);
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
@@ -96,7 +73,9 @@ const Chat: FC<Props> = ({ setChatIsShowing }) => {
 					<div className="messages">
 						{messages.map((message: Message, index: number) => (
 							<div
-								className="person"
+								className={`person ${
+									message?.username === user?.username ? "you" : "other"
+								}`}
 								key={index}
 							>
 								<p className="username">
