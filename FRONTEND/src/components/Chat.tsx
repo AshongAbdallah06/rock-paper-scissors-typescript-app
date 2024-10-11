@@ -5,41 +5,23 @@ import trashCan from "../images/trash-outline.svg";
 
 interface Props {
 	setChatIsShowing: (value: boolean) => void;
+	messages: Message[];
+	setMessages: (value: Message[]) => void;
 }
 
 type Message = { username: string; textMessage: string };
 
-const Chat: FC<Props> = ({ setChatIsShowing }) => {
-	const { socket, roomID, user } = useCheckContext();
+const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
+	const { socket, roomID, user, p1Username, p2Username } = useCheckContext();
 
 	const [textMessage, setTextMessage] = useState<string>("");
-	const [messages, setMessages] = useState(() => {
-		const storedMessages = localStorage.getItem(`room-${roomID}-${user.username}-messages`);
-		try {
-			return storedMessages ? JSON.parse(storedMessages) : [];
-		} catch (error) {
-			console.error("Error parsing selected user stats from localStorage:", error);
-			return null; // Return null if parsing fails
-		}
-	});
-
-	useEffect(() => {
-		socket.on("message", (message: Message) => {
-			setMessages((prevMessages: Message[]) => [...prevMessages, message]);
-		});
-
-		// Delete all messages
-		socket.on("deleteMessage", () => {
-			localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
-			setMessages([]);
-		});
-
-		return () => {
-			socket.off("message");
-		};
-	}, [socket]);
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		setTimeout(() => {
+			setChatIsFetched(true);
+		}, 2000);
+	}, []);
 	useEffect(() => {
 		localStorage.setItem(`room-${roomID}-${user.username}-messages`, JSON.stringify(messages));
 
@@ -58,6 +40,7 @@ const Chat: FC<Props> = ({ setChatIsShowing }) => {
 		localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
 		setMessages([]);
 	};
+	const [chatIsFetched, setChatIsFetched] = useState(false);
 
 	return (
 		<aside>
@@ -92,48 +75,79 @@ const Chat: FC<Props> = ({ setChatIsShowing }) => {
 					</button>
 				</div>
 
-				<div className="chat-container">
-					<div className="messages">
-						{messages.map((message: Message, index: number) => (
-							<div
-								className="person"
-								key={index}
-							>
-								<p className="username">
-									<span
-										className="name"
-										style={{
-											textTransform: "capitalize",
-											fontWeight: "normal",
-										}}
-									>
-										{message?.username === user.username
-											? "You"
-											: message?.username}
-									</span>
-								</p>
-								<p className="message">{message.textMessage}</p>
-								<div ref={messagesEndRef} />
-							</div>
-						))}
+				{chatIsFetched && (
+					<>
+						<div className="chat-container">
+							{p1Username && p2Username ? (
+								<>
+									<div className="messages">
+										{messages.map((message: Message, index: number) => (
+											<div
+												className={`person ${
+													message?.username === user?.username
+														? "you"
+														: "other"
+												}`}
+												key={index}
+											>
+												<p className="username">
+													<span
+														className="name"
+														style={{
+															textTransform: "capitalize",
+															fontWeight: "normal",
+														}}
+													>
+														{message?.username === user.username
+															? "You"
+															: message?.username}
+													</span>
+												</p>
+												<p className="message">{message.textMessage}</p>
+												<div ref={messagesEndRef} />
+											</div>
+										))}
+									</div>
+
+									<div className="input-container">
+										<textarea
+											value={textMessage}
+											placeholder="Enter text message"
+											onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+												setTextMessage(e.target.value);
+											}}
+										></textarea>
+										<button
+											onClick={() => {
+												textMessage !== "" && sendMessage();
+											}}
+										>
+											Send
+										</button>
+									</div>
+								</>
+							) : (
+								<div className="messages left">Your Opponent left</div>
+							)}
+						</div>
+					</>
+				)}
+				{!chatIsFetched && (
+					<div className="lds-spinner">
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
 					</div>
-				</div>
-				<div className="input-container">
-					<textarea
-						value={textMessage}
-						placeholder="Enter text message"
-						onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-							setTextMessage(e.target.value);
-						}}
-					></textarea>
-					<button
-						onClick={() => {
-							textMessage !== "" && sendMessage();
-						}}
-					>
-						Send
-					</button>
-				</div>
+				)}
 			</div>
 		</aside>
 	);

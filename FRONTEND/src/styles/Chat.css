@@ -5,7 +5,7 @@ aside {
 	right: 0;
 	bottom: 10px;
 	color: white;
-	border: 1px solid white;
+	border: 3px solid hsl(238, 24%, 43%);
 	border-right: none;
 	width: 300px;
 	padding: 1rem;
@@ -89,12 +89,30 @@ textarea {
 .person {
 	word-wrap: break-word;
 	margin-bottom: 5px;
+	padding-left: 1rem;
+}
+
+.you {
+	border-left: 3px solid hsl(349, 71%, 52%);
+}
+
+.other {
+	border-left: 3px solid hsl(39, 89%, 49%);
 }
 
 .messages {
-	margin: 1rem;
+	margin: 1rem 0;
 	max-height: 480px;
 	overflow-y: scroll;
+}
+.messages.left {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	border: 2px solid white;
+	border-radius: 10px;
+	background-color: hsl(237, 45%, 17%);
 }
 .messages::-webkit-scrollbar {
 	display: none;

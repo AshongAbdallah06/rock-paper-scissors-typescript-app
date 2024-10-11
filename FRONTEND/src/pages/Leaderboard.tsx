@@ -10,14 +10,15 @@ import FilterDropdown from "../components/FilterDropdown";
 
 const Leaderboard = () => {
 	const { setScores, socket, user } = useCheckContext();
-	const { getAllScores } = useFunctions();
+	const { getAllScores, getStorageItem } = useFunctions();
 
-	const [optChanges, setOptChanges] = useState<string | null>(null);
+	const [optChanges, setOptChanges] = useState<string | null>(
+		getStorageItem("optChanges", "losses")
+	);
 
 	const [renderRoutes, setRenderRoutes] = useState(false);
 	useEffect(() => {
 		getAllScores(socket, setScores);
-		setOptChanges("wins");
 
 		setRenderRoutes(false);
 		const timer = setTimeout(() => {
@@ -26,6 +27,10 @@ const Leaderboard = () => {
 
 		return () => clearTimeout(timer);
 	}, []);
+
+	useEffect(() => {
+		localStorage.setItem("optChanges", JSON.stringify(optChanges));
+	}, [optChanges]);
 
 	const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 

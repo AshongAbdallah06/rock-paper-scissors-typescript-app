@@ -3,19 +3,10 @@ import { Link } from "react-router-dom";
 import useCheckContext from "../hooks/useCheckContext";
 import useFunctions from "../hooks/useFunctions";
 import copyIcon from "../images/copy-regular.svg";
-import CopiedAlert from "../components/CopiedAlert";
 
 const PlayerSelection = () => {
-	const {
-		roomID,
-		setRoomID,
-		setRoomIsSelected,
-		setIsOnePlayer,
-		bonusState,
-		isOnePlayer,
-		socket,
-		user,
-	} = useCheckContext();
+	const { roomID, setRoomID, setRoomIsSelected, setIsOnePlayer, bonusState, socket, user } =
+		useCheckContext();
 	const { joinRoom } = useFunctions();
 
 	/**todo: create remember id functionality 
@@ -97,7 +88,6 @@ const PlayerSelection = () => {
 						/>
 					</div>
 				</div>
-				{!isOnePlayer && showCopiedAlert && <CopiedAlert />}
 
 				<Link
 					className="btn join"

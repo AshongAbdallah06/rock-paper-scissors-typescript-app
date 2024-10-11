@@ -29,38 +29,13 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 		setComputerMoveImage,
 		generateComputerMove,
 		getAllScores,
+		getStorageItem,
 	} = useFunctions();
 
-	const user: User = (() => {
-		const storedUser = localStorage.getItem("user");
-		try {
-			return storedUser ? JSON.parse(storedUser) : null;
-		} catch (error) {
-			console.error("Error parsing user info from localStorage:", error);
-			return null;
-		}
-	})();
+	const user: User = getStorageItem("user", null);
+	const token: string = getStorageItem("token", null);
+	const playerMode: string = getStorageItem("player-mode", null);
 
-	const token = (() => {
-		const storedToken = localStorage.getItem("token");
-		try {
-			return storedToken ? JSON.parse(storedToken) : null;
-		} catch (error) {
-			console.error("Error parsing token from localStorage:", error);
-			return null;
-		}
-	})();
-	//Check if it's a one player game
-	// When a player joins a room
-	const playerMode = (() => {
-		const storedPlayerMode = localStorage.getItem("player-mode");
-		try {
-			return storedPlayerMode ? JSON.parse(storedPlayerMode) : null;
-		} catch (error) {
-			console.error("Error parsing player mode from localStorage:", error);
-			return null;
-		}
-	})();
 	const [isOnePlayer, setIsOnePlayer] = useState<boolean>(
 		playerMode && playerMode === "dual" ? false : true
 	);
@@ -80,16 +55,9 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	const [result, setResult] = useState<string | null>(null);
 	const [moveAck, setMoveAck] = useState<string | null | "">(null);
 	const [roomID, setRoomID] = useState<string | null>(null);
+	const [alertCounter, setAlertCounter] = useState<number>(getStorageItem("alertCounter", 0));
 
-	const usernames: Usernames = (() => {
-		const storedUsernames = localStorage.getItem("usernames");
-		try {
-			return storedUsernames ? JSON.parse(storedUsernames) : null;
-		} catch (error) {
-			console.error("Error parsing usernames from localStorage:", error);
-			return null;
-		}
-	})();
+	const usernames: Usernames = getStorageItem("usernames", null);
 
 	const [currentUserStats, setCurrentUserStats] = useState<CurrentUserStats | null>({
 		score: 0,
@@ -110,15 +78,9 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 		ties: 0,
 		games_played: 0,
 	});
-	const [selectedUserStats, setSelectedUserStats] = useState<UserStats>(() => {
-		const storedStats = localStorage.getItem("selectedUser");
-		try {
-			return storedStats ? JSON.parse(storedStats) : null;
-		} catch (error) {
-			console.error("Error parsing selected user stats from localStorage:", error);
-			return null; // Return null if parsing fails
-		}
-	});
+	const [selectedUserStats, setSelectedUserStats] = useState<UserStats>(
+		getStorageItem("selectedUser", null)
+	);
 	const [p1Username, setP1Username] = useState<string | null>("");
 	const [p2Username, setP2Username] = useState<string | null>("");
 	const [userExists, setUserExists] = useState<boolean | undefined>(undefined);
@@ -170,16 +132,6 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 			socket.off("move-made");
 		};
 	}, [socket]);
-
-	const bonus = () => {
-		const storedBonus = localStorage.getItem("bonus");
-		try {
-			return storedBonus ? JSON.parse(storedBonus) : null;
-		} catch (error) {
-			console.error("Error parsing selected user stats from localStorage:", error);
-			return null; // Return null if parsing fails
-		}
-	};
 
 	const [bonusState, setBonusState] = useState<boolean | "setting">(
 		JSON.parse(localStorage.getItem("bonus") || "")
@@ -444,6 +396,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 				user,
 				bonusState,
 				setBonusState,
+				alertCounter,
+				setAlertCounter,
 			}}
 		>
 			{children}

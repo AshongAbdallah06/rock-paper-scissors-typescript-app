@@ -24,7 +24,7 @@ const handleErrors = (err) => {
 };
 
 const createToken = (id) => {
-	return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "3d" });
+	return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "50d" });
 };
 
 const signup = async (req, res) => {

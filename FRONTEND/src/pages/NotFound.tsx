@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Logo from "../components/Logo";
 
-const NotFound = (): React.ReactElement | null => {
+const NotFound = (): ReactElement | null => {
 	const [renderUnknownRoutes, setRenderUnknownRoutes] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -12,18 +13,19 @@ const NotFound = (): React.ReactElement | null => {
 		return () => clearTimeout(timer);
 	}, []);
 
-	// Always return a valid JSX element or null
 	return renderUnknownRoutes ? (
-		<div style={{ color: "white", textAlign: "center" }}>
+		<div className="not-found">
+			<Logo />
 			<h1>Page not found</h1>
 			<Link
-				to="/select-player-mode"
+				to="/"
 				style={{ color: "white" }}
+				className="not-found-btn btn"
 			>
-				Select Player Mode
+				Go Back Home
 			</Link>
 		</div>
-	) : null; // Return null instead of false
+	) : null;
 };
 
 export default NotFound;

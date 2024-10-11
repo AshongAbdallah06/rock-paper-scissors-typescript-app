@@ -51,4 +51,6 @@ export interface ContextType {
 	user: User;
 	bonusState: boolean | "setting";
 	setBonusState: (value: boolean | "setting") => void;
+	alertCounter: number;
+	setAlertCounter: (value: number) => void;
 }

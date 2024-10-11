@@ -211,20 +211,6 @@ const App: FC = () => {
 						}
 					/>
 
-					{/* <Route
-						path={"/help/contact"}
-						element={
-							<PrivateRoute userExists={userExists}>
-								<Loading
-									isRendered={isRendered}
-									setIsRendered={setIsRendered}
-								>
-									<Contact />
-								</Loading>
-							</PrivateRoute>
-						}
-					/> */}
-
 					<Route
 						path={`/p/${user?.username}`}
 						element={
@@ -238,20 +224,6 @@ const App: FC = () => {
 							</PrivateRoute>
 						}
 					/>
-					{/* 
-					<Route
-						path="/edit/profile"
-						element={
-							<PrivateRoute userExists={userExists}>
-								<Loading
-									isRendered={isRendered}
-									setIsRendered={setIsRendered}
-								>
-									<EditProfile />
-								</Loading>
-							</PrivateRoute>
-						}
-					/> */}
 
 					{isOnePlayer && (
 						<Route
