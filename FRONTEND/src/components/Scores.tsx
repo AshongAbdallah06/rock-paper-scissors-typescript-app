@@ -17,7 +17,7 @@ const ScoresDisplay: FC<Props> = ({ optChanges }) => {
 		setSearchParams((params) => ({ ...params, filter_query: query }));
 	};
 
-	const [scoresIsFetched, setScoresIsFetched] = useState(false);
+	const [scoresIsFetched, setScoresIsFetched] = useState<boolean>(false);
 	useEffect(() => {
 		if (optChanges === "wins") {
 			optChangesFunc("getScores", "wins");
@@ -29,7 +29,6 @@ const ScoresDisplay: FC<Props> = ({ optChanges }) => {
 			optChangesFunc("getScoresByGamesPlayed", "games_played");
 		}
 
-		setScoresIsFetched(false);
 		setTimeout(() => {
 			setScoresIsFetched(true);
 		}, 2000);

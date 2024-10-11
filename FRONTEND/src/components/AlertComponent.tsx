@@ -5,17 +5,18 @@ type Message = { username: string; textMessage: string };
 
 interface Props {
 	message: string;
+	message1: string;
 	setChatIsShowing: (value: boolean) => void;
 	messages?: Message[];
 }
 
-const AlertComponent: FC<Props> = ({ message, setChatIsShowing, messages }) => {
+const AlertComponent: FC<Props> = ({ message, message1, setChatIsShowing, messages }) => {
 	const { user } = useCheckContext();
 	const [isNotificationAlert, setIsNotificationAlert] = useState<boolean>(false);
 	const [isEqual, setIsEqual] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (message === "New message. Click to view message.") {
+		if (message === "You have a new message") {
 			setIsNotificationAlert(true);
 
 			if (messages) {
@@ -36,7 +37,8 @@ const AlertComponent: FC<Props> = ({ message, setChatIsShowing, messages }) => {
 						className="message-alert"
 						onClick={() => setChatIsShowing(true)}
 					>
-						{message}
+						{message} <br />
+						{message1}
 					</div>
 				)
 			)}

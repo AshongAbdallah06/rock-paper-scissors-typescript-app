@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import DualPlayerStats from "../components/DualPlayerStats";
 import AlertComponent from "../components/AlertComponent";
 import { MessageType } from "../Types";
+import ChangeMode from "../components/ChangeMode";
 
 const Home = () => {
 	const [chatIsShowing, setChatIsShowing] = useState(false);
@@ -119,6 +120,7 @@ const Home = () => {
 	const [sidebarIsShowing, setSidebarIsShowing] = useState<boolean>(false);
 	const [bonusState, setBonusState] = useState<boolean>(!bonus ? false : true);
 	const [showDualPlayerStats, setShowDualPlayerStats] = useState<boolean>(false);
+	const [showChangeModePopup, setShowChangeModePopup] = useState<boolean>(false);
 
 	return (
 		<>
@@ -133,7 +135,8 @@ const Home = () => {
 					/>
 					{!isOnePlayer && showMessageAlert && (
 						<AlertComponent
-							message="New message. Click to view message."
+							message="You have a new message"
+							message1="Click here to view."
 							setChatIsShowing={setChatIsShowing}
 							messages={messages}
 						/>
@@ -146,15 +149,19 @@ const Home = () => {
 
 					<GameBoard />
 
+					{showChangeModePopup && (
+						<ChangeMode
+							setShowChangeModePopup={setShowChangeModePopup}
+							setSidebarIsShowing={setSidebarIsShowing}
+						/>
+					)}
 					{!bonusState ? <Dialog /> : <BonusDialog />}
-					{chatIsShowing ? (
+					{chatIsShowing && (
 						<Chat
 							setMessages={setMessages}
 							setChatIsShowing={setChatIsShowing}
 							messages={messages}
 						/>
-					) : (
-						""
 					)}
 
 					{sidebarIsShowing && (
@@ -166,6 +173,7 @@ const Home = () => {
 							bonusState={bonusState}
 							setBonusState={setBonusState}
 							setShowDualPlayerStats={setShowDualPlayerStats}
+							setShowChangeModePopup={setShowChangeModePopup}
 						/>
 					)}
 

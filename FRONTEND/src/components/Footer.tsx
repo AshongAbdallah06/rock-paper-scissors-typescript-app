@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import useCheckContext from "../hooks/useCheckContext";
 import { Link } from "react-router-dom";
 import profile from "../images/person-circle-outline.svg";
@@ -21,6 +21,7 @@ interface Props {
 	bonusState: boolean;
 	setBonusState: (value: boolean | "setting" | any) => void;
 	setShowDualPlayerStats: (value: boolean) => void;
+	setShowChangeModePopup: (value: boolean) => void;
 }
 
 const Footer: FC<Props> = ({
@@ -29,6 +30,7 @@ const Footer: FC<Props> = ({
 	chatIsShowing,
 	setChatIsShowing,
 	setShowDualPlayerStats,
+	setShowChangeModePopup,
 }) => {
 	const {
 		isOnePlayer,
@@ -111,12 +113,7 @@ const Footer: FC<Props> = ({
 				{!isOnePlayer && (
 					<div
 						onClick={() => {
-							setIsOnePlayer(true);
-							setPlayerIsChosen(true);
-							setRoomIsSelected(true);
-							setSidebarIsShowing(false);
-
-							window.location.reload();
+							setShowChangeModePopup(true);
 						}}
 						className="link"
 					>

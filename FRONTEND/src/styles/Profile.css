@@ -231,7 +231,7 @@ input[type="file"] {
 .join {
 	text-align: center;
 }
-.save-btn,
+.save-btn:hover,
 .join:hover {
 	background-color: #2980b9;
 }

@@ -12,11 +12,16 @@ interface Props {
 type Message = { username: string; textMessage: string };
 
 const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
-	const { socket, roomID, user } = useCheckContext();
+	const { socket, roomID, user, p1Username, p2Username } = useCheckContext();
 
 	const [textMessage, setTextMessage] = useState<string>("");
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		setTimeout(() => {
+			setChatIsFetched(true);
+		}, 2000);
+	}, []);
 	useEffect(() => {
 		localStorage.setItem(`room-${roomID}-${user.username}-messages`, JSON.stringify(messages));
 
@@ -35,6 +40,7 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 		localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
 		setMessages([]);
 	};
+	const [chatIsFetched, setChatIsFetched] = useState(false);
 
 	return (
 		<aside>
@@ -69,50 +75,79 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 					</button>
 				</div>
 
-				<div className="chat-container">
-					<div className="messages">
-						{messages.map((message: Message, index: number) => (
-							<div
-								className={`person ${
-									message?.username === user?.username ? "you" : "other"
-								}`}
-								key={index}
-							>
-								<p className="username">
-									<span
-										className="name"
-										style={{
-											textTransform: "capitalize",
-											fontWeight: "normal",
-										}}
-									>
-										{message?.username === user.username
-											? "You"
-											: message?.username}
-									</span>
-								</p>
-								<p className="message">{message.textMessage}</p>
-								<div ref={messagesEndRef} />
-							</div>
-						))}
+				{chatIsFetched && (
+					<>
+						<div className="chat-container">
+							{p1Username && p2Username ? (
+								<>
+									<div className="messages">
+										{messages.map((message: Message, index: number) => (
+											<div
+												className={`person ${
+													message?.username === user?.username
+														? "you"
+														: "other"
+												}`}
+												key={index}
+											>
+												<p className="username">
+													<span
+														className="name"
+														style={{
+															textTransform: "capitalize",
+															fontWeight: "normal",
+														}}
+													>
+														{message?.username === user.username
+															? "You"
+															: message?.username}
+													</span>
+												</p>
+												<p className="message">{message.textMessage}</p>
+												<div ref={messagesEndRef} />
+											</div>
+										))}
+									</div>
+
+									<div className="input-container">
+										<textarea
+											value={textMessage}
+											placeholder="Enter text message"
+											onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+												setTextMessage(e.target.value);
+											}}
+										></textarea>
+										<button
+											onClick={() => {
+												textMessage !== "" && sendMessage();
+											}}
+										>
+											Send
+										</button>
+									</div>
+								</>
+							) : (
+								<div className="messages left">Your Opponent left</div>
+							)}
+						</div>
+					</>
+				)}
+				{!chatIsFetched && (
+					<div className="lds-spinner">
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
 					</div>
-				</div>
-				<div className="input-container">
-					<textarea
-						value={textMessage}
-						placeholder="Enter text message"
-						onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-							setTextMessage(e.target.value);
-						}}
-					></textarea>
-					<button
-						onClick={() => {
-							textMessage !== "" && sendMessage();
-						}}
-					>
-						Send
-					</button>
-				</div>
+				)}
 			</div>
 		</aside>
 	);
