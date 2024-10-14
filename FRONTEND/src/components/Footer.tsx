@@ -18,8 +18,6 @@ interface Props {
 	setSidebarIsShowing: (value: boolean) => void;
 	chatIsShowing: boolean;
 	setChatIsShowing: (value: boolean) => void;
-	bonusState: boolean;
-	setBonusState: (value: boolean | "setting" | any) => void;
 	setShowDualPlayerStats: (value: boolean) => void;
 	setShowChangeModePopup: (value: boolean) => void;
 }
@@ -116,6 +114,7 @@ const Footer: FC<Props> = ({
 							setShowChangeModePopup(true);
 						}}
 						className="link"
+						title="Play against computer."
 					>
 						<img
 							src={singleIcon}
@@ -135,6 +134,7 @@ const Footer: FC<Props> = ({
 							setPlayerIsChosen(true);
 							setSidebarIsShowing(false);
 						}}
+						title="Play against a friend"
 					>
 						<img
 							src={dualIcon}
@@ -195,6 +195,7 @@ const Footer: FC<Props> = ({
 			<Link
 				to={`/p/${user?.username}`}
 				className="link"
+				title="View your profile"
 			>
 				<img
 					src={profile}
@@ -206,6 +207,7 @@ const Footer: FC<Props> = ({
 			<Link
 				to="/help"
 				className="link"
+				title="Get help"
 			>
 				<img
 					src={helpIcon}

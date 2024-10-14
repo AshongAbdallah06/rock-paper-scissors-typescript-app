@@ -15,6 +15,7 @@ const ScoresDisplay: FC<Props> = ({ optChanges }) => {
 	const optChangesFunc = (socketName: string, query: string) => {
 		socket.emit(socketName);
 		setSearchParams((params) => ({ ...params, filter_query: query }));
+		setScoresIsFetched(false);
 	};
 
 	const [scoresIsFetched, setScoresIsFetched] = useState<boolean>(false);

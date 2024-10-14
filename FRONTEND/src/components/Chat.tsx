@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from "react";
 import closeIcon from "../images/icon-close-chat.svg";
 import useCheckContext from "../hooks/useCheckContext";
 import trashCan from "../images/trash-outline.svg";
@@ -7,20 +7,25 @@ interface Props {
 	setChatIsShowing: (value: boolean) => void;
 	messages: Message[];
 	setMessages: (value: Message[]) => void;
+	setShowMessageAlert: (value: boolean) => void;
 }
 
 type Message = { username: string; textMessage: string };
 
-const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
+const Chat: FC<Props> = ({ setChatIsShowing, messages, setShowMessageAlert, setMessages }) => {
 	const { socket, roomID, user, p1Username, p2Username } = useCheckContext();
 
 	const [textMessage, setTextMessage] = useState<string>("");
+	const [chatIsFetched, setChatIsFetched] = useState(false);
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		setTimeout(() => {
 			setChatIsFetched(true);
 		}, 2000);
+		setTimeout(() => {
+			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		}, 2100);
 	}, []);
 	useEffect(() => {
 		localStorage.setItem(`room-${roomID}-${user.username}-messages`, JSON.stringify(messages));
@@ -36,12 +41,12 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 	};
 
 	const deleteChat = () => {
-		socket.emit("deleteMessage");
 		localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
 		setMessages([]);
-	};
-	const [chatIsFetched, setChatIsFetched] = useState(false);
 
+		messages.length > 0 &&
+			socket.emit("message", { username: user.username, textMessage: " deleted the chat." });
+	};
 	return (
 		<aside>
 			<div className="content">
@@ -53,6 +58,7 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 						className="close-icon"
 						onClick={() => {
 							setChatIsShowing(false);
+							setShowMessageAlert(false);
 						}}
 					/>
 				</header>
@@ -81,42 +87,46 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setMessages }) => {
 							{p1Username && p2Username ? (
 								<>
 									<div className="messages">
-										{messages.map((message: Message, index: number) => (
-											<div
-												className={`person ${
-													message?.username === user?.username
-														? "you"
-														: "other"
-												}`}
-												key={index}
-											>
-												<p className="username">
-													<span
-														className="name"
-														style={{
-															textTransform: "capitalize",
-															fontWeight: "normal",
-														}}
+										{messages.map(
+											({ textMessage, username }, index) => (
+												<>
+													<div
+														className={`${
+															textMessage.includes("deleted")
+																? "deleted"
+																: username === user?.username
+																? "person you"
+																: "person other"
+														}`}
+														key={index}
 													>
-														{message?.username === user.username
-															? "You"
-															: message?.username}
-													</span>
-												</p>
-												<p className="message">{message.textMessage}</p>
-												<div ref={messagesEndRef} />
-											</div>
-										))}
+														<p className="username">
+															{username === user.username
+																? "You"
+																: username}
+														</p>
+														<p className="message">{textMessage}</p>
+														<div ref={messagesEndRef} />
+													</div>
+												</>
+											)
+											// )
+										)}
 									</div>
 
 									<div className="input-container">
-										<textarea
+										<input
 											value={textMessage}
 											placeholder="Enter text message"
-											onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+											onChange={(e: ChangeEvent<HTMLInputElement>) => {
 												setTextMessage(e.target.value);
 											}}
-										></textarea>
+											onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+												if (e.key === "Enter" && textMessage !== "") {
+													sendMessage();
+												}
+											}}
+										></input>
 										<button
 											onClick={() => {
 												textMessage !== "" && sendMessage();

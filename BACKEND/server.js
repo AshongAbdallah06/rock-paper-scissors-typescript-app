@@ -115,23 +115,11 @@ io.on("connect", (socket) => {
 		}
 	});
 
-	socket.on("active-rooms", (room) => {
-		Object.values(usernames).forEach((username) => {
-			if (username.p1Username !== null && username.p2Username === null) {
-				io.emit("active-rooms", gameRooms);
-			} else if (username.p1Username === null && username.p2Username !== null) {
-				io.emit("active-rooms", gameRooms);
-			} else if (username.p1Username && username.p2Username) {
-				io.emit("active-rooms");
-			}
-		});
-	});
-
 	socket.on("move-made", (username) => {
 		socket.broadcast.to(roomId).emit("move-made", { msg: username + " has made a move" });
 	});
 
-	socket.on("leaveRoom", (username) => {
+	socket.on("leave-room", (username) => {
 		// Remove the username from the room
 		if (usernames[roomId]?.p1Username === username) {
 			usernames[roomId].p1Username = null;
@@ -146,7 +134,7 @@ io.on("connect", (socket) => {
 
 		// Emit the updated usernames list to the room
 		io.to(roomId).emit("updateUsernames", usernames[roomId]);
-		io.to(roomId).emit("leaveRoom", { msg: username + " has left the room" });
+		io.to(roomId).emit("leave-room", { msg: username + " has left the room" });
 	});
 
 	socket.on("move", async ({ username, move }) => {
@@ -241,10 +229,6 @@ io.on("connect", (socket) => {
 
 	socket.on("message", async ({ username, textMessage }) => {
 		io.to(roomId).emit("message", { username, textMessage });
-	});
-
-	socket.on("deleteMessage", () => {
-		io.to(roomId).emit("deleteMessage");
 	});
 
 	socket.on("getAllScores", async () => {

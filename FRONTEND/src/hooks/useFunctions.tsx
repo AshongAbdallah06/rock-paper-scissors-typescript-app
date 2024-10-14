@@ -253,7 +253,7 @@ const useFunctions = () => {
 	// Leave Room
 	const leaveRoom = (socket: Socket) => {
 		try {
-			socket.emit("leaveRoom", user.username);
+			socket.emit("leave-room", user.username);
 		} catch (error) {
 			alert("Error Occurred. Check the console to see what occurred.");
 			console.log("🚀 ~ leaveRoom ~ error:", error);
@@ -275,6 +275,7 @@ const useFunctions = () => {
 		localStorage.removeItem("user");
 		localStorage.removeItem("usernames");
 		localStorage.removeItem("selectedUser");
+		localStorage.removeItem("token");
 
 		window.location.href = "/login";
 	};

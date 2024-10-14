@@ -12,7 +12,7 @@ const Nav: FC<Props> = ({ setSidebarIsShowing }) => {
 	const [navIsShowing, setNavIsShowing] = useState(false);
 
 	useEffect(() => {
-		socket.on("leaveRoom", ({ msg }: { msg: string }) => {
+		socket.on("leave-room", ({ msg }: { msg: string }) => {
 			setLeftRoom(msg);
 
 			setTimeout(() => {

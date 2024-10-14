@@ -5,8 +5,16 @@ import useFunctions from "../hooks/useFunctions";
 import copyIcon from "../images/copy-regular.svg";
 
 const PlayerSelection = () => {
-	const { roomID, setRoomID, setRoomIsSelected, setIsOnePlayer, bonusState, socket, user } =
-		useCheckContext();
+	const {
+		roomID,
+		setRoomID,
+		setRoomIsSelected,
+		isOnePlayer,
+		setIsOnePlayer,
+		bonusState,
+		socket,
+		user,
+	} = useCheckContext();
 	const { joinRoom } = useFunctions();
 
 	/**todo: create remember id functionality 
@@ -26,11 +34,10 @@ const PlayerSelection = () => {
 		}
 	}, [roomID]);*/
 
-	const inputRef = useRef<HTMLInputElement | null>(null); // Use null instead of undefined
+	const inputRef = useRef<HTMLInputElement | null>(null);
 	useEffect(() => {
-		socket.emit("active-rooms");
 		if (inputRef.current) {
-			inputRef.current.focus(); // Safely call focus if current is not null
+			inputRef.current.focus();
 		}
 	}, []);
 	const [showCopiedAlert, setShowCopiedAlert] = useState(false);
@@ -57,7 +64,7 @@ const PlayerSelection = () => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				roomID && joinRoom(socket, roomID, bonusState);
+				roomID && !isOnePlayer && joinRoom(socket, roomID, bonusState);
 				roomID && setRoomIsSelected(true);
 			}}
 		>
@@ -93,10 +100,9 @@ const PlayerSelection = () => {
 					className="btn join"
 					onClick={() => {
 						if (roomID) {
-							joinRoom(socket, roomID, bonusState);
+							!isOnePlayer && joinRoom(socket, roomID, bonusState);
 							setRoomIsSelected(true);
 							setIsOnePlayer(false);
-							socket.emit("active-rooms");
 						} else if (roomID === "") {
 							alert("Please enter an ID for the room");
 						}
@@ -131,15 +137,6 @@ const PlayerSelection = () => {
 						}}
 					>
 						Change Mode
-					</Link>
-					<Link
-						className="link-item"
-						onClick={() => {
-							socket.emit("active-rooms");
-						}}
-						to="/available-rooms"
-					>
-						See Active Rooms
 					</Link>
 				</div>
 			</div>

@@ -25,6 +25,7 @@ const Home = () => {
 		alertCounter,
 		setAlertCounter,
 		roomID,
+		bonusState,
 	} = useCheckContext();
 	const { joinRoom, getStorageItem } = useFunctions();
 
@@ -43,15 +44,13 @@ const Home = () => {
 		}, 2000);
 	}, [hasLeftRoom]);
 
-	const bonus = getStorageItem("bonus", null);
-
 	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (alertCounter === 0) {
 			setAlertCounter(alertCounter + 1);
 			alert(
-				"Server takes a little time to respond; about a 50s to 1min. So you may want to reload the page to refetch score accurately."
+				"Server may take a little time to respond; about a 50s to 1min. You may want to reload the page after 50s to refetch score accurately."
 			);
 		}
 
@@ -67,10 +66,6 @@ const Home = () => {
 				window.location.href = "/login";
 			}
 		});
-
-		if (isOnePlayer) {
-			joinRoom(socket, user.username, bonusState);
-		}
 
 		if (!localStorage.getItem("bonus")) {
 			localStorage.setItem("bonus", JSON.stringify(false));
@@ -100,12 +95,6 @@ const Home = () => {
 			}, 5000);
 		});
 
-		// Delete all messages
-		socket.on("deleteMessage", () => {
-			localStorage.removeItem(`room-${roomID}-${user.username}-messages`);
-			setMessages([]);
-		});
-
 		return () => {
 			socket.off("message");
 		};
@@ -118,7 +107,6 @@ const Home = () => {
 	}, [alertCounter]);
 
 	const [sidebarIsShowing, setSidebarIsShowing] = useState<boolean>(false);
-	const [bonusState, setBonusState] = useState<boolean>(!bonus ? false : true);
 	const [showDualPlayerStats, setShowDualPlayerStats] = useState<boolean>(false);
 	const [showChangeModePopup, setShowChangeModePopup] = useState<boolean>(false);
 
@@ -133,7 +121,7 @@ const Home = () => {
 						sidebarIsShowing={sidebarIsShowing}
 						setSidebarIsShowing={setSidebarIsShowing}
 					/>
-					{!isOnePlayer && showMessageAlert && (
+					{!isOnePlayer && showMessageAlert && !chatIsShowing && (
 						<AlertComponent
 							message="You have a new message"
 							message1="Click here to view."
@@ -161,6 +149,7 @@ const Home = () => {
 							setMessages={setMessages}
 							setChatIsShowing={setChatIsShowing}
 							messages={messages}
+							setShowMessageAlert={setShowMessageAlert}
 						/>
 					)}
 
@@ -170,8 +159,6 @@ const Home = () => {
 							setSidebarIsShowing={setSidebarIsShowing}
 							setChatIsShowing={setChatIsShowing}
 							chatIsShowing={chatIsShowing}
-							bonusState={bonusState}
-							setBonusState={setBonusState}
 							setShowDualPlayerStats={setShowDualPlayerStats}
 							setShowChangeModePopup={setShowChangeModePopup}
 						/>

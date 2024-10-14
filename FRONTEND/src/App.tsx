@@ -13,10 +13,6 @@ import NotFound from "./pages/NotFound";
 import Loader from "./components/Loader";
 import Logo from "./components/Logo";
 import Help from "./pages/Help";
-import Axios from "axios";
-import Contact from "./pages/Contact";
-import AvailableRooms from "./components/AvailableRooms";
-import EditProfile from "./pages/EditProfile";
 import "./styles/Animation.css";
 import "./styles/Home.css";
 import "./styles/Leaderboard.css";
@@ -27,8 +23,6 @@ import "./styles/Chat.css";
 import "./styles/Sidebar.css";
 import "./styles/Room.css";
 import "./styles/Form.css";
-
-// export const GameContext = createContext();
 
 function PrivateRoute({
 	userExists,
@@ -168,17 +162,6 @@ const App: FC = () => {
 								<Logo />
 
 								{!isOnePlayer ? <Room /> : <Navigate to="/" />}
-							</PrivateRoute>
-						}
-					/>
-
-					<Route
-						path="/available-rooms"
-						element={
-							<PrivateRoute userExists={userExists}>
-								<Logo />
-
-								<AvailableRooms />
 							</PrivateRoute>
 						}
 					/>
