@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, ReactNode } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import useCheckContext from "./hooks/useCheckContext";
+import useContextProvider from "./hooks/useContextProvider";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PlayerSelection from "./pages/PlayerSelection";
@@ -102,7 +102,7 @@ const LoadingApp: FC<LoadingAppProps> = ({ isAppRendered, setIsAppRendered, chil
 
 const App: FC = () => {
 	const { playerIsChosen, roomIsSelected, userExists, isOnePlayer, user, authorize } =
-		useCheckContext();
+		useContextProvider();
 	const [isRendered, setIsRendered] = useState<boolean>(false);
 	const [isAppRendered, setIsAppRendered] = useState<boolean>(false);
 

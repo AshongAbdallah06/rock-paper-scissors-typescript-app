@@ -1,9 +1,9 @@
 import React from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import LoadingDots from "./LoadingDots";
 
 const MakingMove = () => {
-	const { isOnePlayer } = useCheckContext();
+	const { isOnePlayer } = useContextProvider();
 
 	return (
 		<h1 className="making-move">

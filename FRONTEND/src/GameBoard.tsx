@@ -4,7 +4,7 @@ import Scissors from "./components/Scissors";
 import Rock from "./components/Rock";
 import AfterChoice from "./components/AfterChoice";
 import MakingMove from "./components/MakingMove";
-import useCheckContext from "./hooks/useCheckContext";
+import useContextProvider from "./hooks/useContextProvider";
 import rockIcon from "./images/icon-rock.svg";
 import paperIcon from "./images/icon-paper.svg";
 import scissorsIcon from "./images/icon-scissors.svg";
@@ -16,7 +16,7 @@ import Spock from "./components/bonus/Spock";
 import Loader from "./components/Loader";
 
 const GameBoard: FC = () => {
-	const { playerMove, computerMove, isOnePlayer, bonusState } = useCheckContext();
+	const { playerMove, computerMove, isOnePlayer, bonusState } = useContextProvider();
 	const [showAfterChoice, setShowAfterChoice] = useState<boolean | null>(null);
 
 	useEffect(() => {

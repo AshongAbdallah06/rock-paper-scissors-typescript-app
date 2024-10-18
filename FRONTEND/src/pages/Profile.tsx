@@ -5,12 +5,12 @@ import dualIcon from "../images/people-outline-black.svg";
 import logo from "../images/logo.svg";
 import { Link, useSearchParams } from "react-router-dom";
 
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import EditProfile from "./EditProfile";
 import useFunctions from "../hooks/useFunctions";
 
 const Profile = () => {
-	const { currentUserStats, user } = useCheckContext();
+	const { currentUserStats, user } = useContextProvider();
 	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 	const { allGamesPlayed, allLosses, allTies, allWins, getAllDualPlayerStats } = useFunctions();
 
@@ -24,7 +24,7 @@ const Profile = () => {
 		setImg(user?.image);
 		return () => clearTimeout(timer);
 	}, []);
-	const [img, setImg] = useState(user?.image || null);
+	const [img, setImg] = useState<string | null>(user?.image || null);
 
 	const [edit, setEdit] = useState<boolean>(false);
 	const [newLocation, setNewLocation] = useState<string | null>(user?.location || "");

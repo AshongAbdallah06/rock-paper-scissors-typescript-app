@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from "react";
 import closeIcon from "../images/icon-close-chat.svg";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import trashCan from "../images/trash-outline.svg";
 
 interface Props {
@@ -13,25 +13,18 @@ interface Props {
 type Message = { username: string; textMessage: string };
 
 const Chat: FC<Props> = ({ setChatIsShowing, messages, setShowMessageAlert, setMessages }) => {
-	const { socket, roomID, user, p1Username, p2Username } = useCheckContext();
+	const { socket, roomID, user, p1Username, p2Username } = useContextProvider();
 
 	const [textMessage, setTextMessage] = useState<string>("");
-	const [chatIsFetched, setChatIsFetched] = useState(false);
+	const [chatIsFetched, setChatIsFetched] = useState<boolean>(false);
 
-	const messagesEndRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		setTimeout(() => {
 			setChatIsFetched(true);
 		}, 2000);
-		setTimeout(() => {
-			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-		}, 2100);
 	}, []);
 	useEffect(() => {
 		localStorage.setItem(`room-${roomID}-${user.username}-messages`, JSON.stringify(messages));
-
-		// Scroll to bottom
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
 	const sendMessage = () => {
@@ -87,31 +80,27 @@ const Chat: FC<Props> = ({ setChatIsShowing, messages, setShowMessageAlert, setM
 							{p1Username && p2Username ? (
 								<>
 									<div className="messages">
-										{messages.map(
-											({ textMessage, username }, index) => (
-												<>
-													<div
-														className={`${
-															textMessage.includes("deleted")
-																? "deleted"
-																: username === user?.username
-																? "person you"
-																: "person other"
-														}`}
-														key={index}
-													>
-														<p className="username">
-															{username === user.username
-																? "You"
-																: username}
-														</p>
-														<p className="message">{textMessage}</p>
-														<div ref={messagesEndRef} />
-													</div>
-												</>
-											)
-											// )
-										)}
+										{messages.map(({ textMessage, username }, index) => (
+											<>
+												<div
+													className={`${
+														textMessage.includes("deleted")
+															? "deleted"
+															: username === user?.username
+															? "person you"
+															: "person other"
+													}`}
+													key={index}
+												>
+													<p className="username">
+														{username === user.username
+															? "You"
+															: username}
+													</p>
+													<p className="message">{textMessage}</p>
+												</div>
+											</>
+										))}
 									</div>
 
 									<div className="input-container">

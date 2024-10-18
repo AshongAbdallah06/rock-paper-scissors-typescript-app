@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 
 interface Props {
 	bonusState: boolean;
@@ -20,7 +20,7 @@ const AfterChoice: FC<Props> = ({ bonusState }) => {
 		p1Username,
 		p2Username,
 		user,
-	} = useCheckContext();
+	} = useContextProvider();
 
 	return (
 		<div className="Desktop-step2">

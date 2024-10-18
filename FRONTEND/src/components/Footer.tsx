@@ -1,5 +1,5 @@
 import { FC } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import { Link } from "react-router-dom";
 import profile from "../images/person-circle-outline.svg";
 import closeIcon from "../images/icon-close nav.svg";
@@ -41,7 +41,7 @@ const Footer: FC<Props> = ({
 		setBonusState,
 		p1Username,
 		p2Username,
-	} = useCheckContext();
+	} = useContextProvider();
 	const { leaveRoom, logout } = useFunctions();
 
 	return (
@@ -147,7 +147,7 @@ const Footer: FC<Props> = ({
 			</>
 
 			<>
-				{bonusState && ((!p1Username && p2Username) || (p1Username && !p2Username)) && (
+				{bonusState && isOnePlayer && (
 					<Link
 						to="/"
 						onClick={() => {
@@ -169,7 +169,7 @@ const Footer: FC<Props> = ({
 					</Link>
 				)}
 
-				{!bonusState && ((!p1Username && p2Username) || (p1Username && !p2Username)) && (
+				{!bonusState && isOnePlayer && (
 					<Link
 						to="/"
 						className="link"

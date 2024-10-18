@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import menuBar from "../images/menu-outline.svg";
 
 interface Props {
@@ -8,8 +8,8 @@ interface Props {
 }
 
 const Nav: FC<Props> = ({ setSidebarIsShowing }) => {
-	const { roomID, socket, setLeftRoom, leftRoom } = useCheckContext();
-	const [navIsShowing, setNavIsShowing] = useState(false);
+	const { roomID, socket, setLeftRoom, leftRoom } = useContextProvider();
+	const [navIsShowing, setNavIsShowing] = useState<boolean>(false);
 
 	useEffect(() => {
 		socket.on("leave-room", ({ msg }: { msg: string }) => {

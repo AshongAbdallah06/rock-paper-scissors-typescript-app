@@ -1,5 +1,5 @@
 import { FC } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 
 interface Props {
 	setShowChangeModePopup: (value: boolean) => void;
@@ -7,7 +7,7 @@ interface Props {
 }
 const ChangeMode: FC<Props> = ({ setShowChangeModePopup, setSidebarIsShowing }) => {
 	const { setIsRulesModalShow, setIsOnePlayer, setPlayerIsChosen, setRoomIsSelected } =
-		useCheckContext();
+		useContextProvider();
 
 	return (
 		<>

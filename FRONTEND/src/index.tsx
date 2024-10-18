@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import CheckContextProvider from "./context/CheckContextProvider";
+import ContextProvider from "./context/ContextProvider";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const rootElement = document.getElementById("root");
@@ -11,9 +11,9 @@ if (rootElement) {
 	root.render(
 		<React.StrictMode>
 			<Router>
-				<CheckContextProvider>
+				<ContextProvider>
 					<App />
-				</CheckContextProvider>
+				</ContextProvider>
 			</Router>
 		</React.StrictMode>
 	);

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import useFunctions from "../hooks/useFunctions";
 import copyIcon from "../images/copy-regular.svg";
 
@@ -14,11 +14,11 @@ const PlayerSelection = () => {
 		bonusState,
 		socket,
 		user,
-	} = useCheckContext();
+	} = useContextProvider();
 	const { joinRoom } = useFunctions();
 
 	/**todo: create remember id functionality 
-	 * const [rememberID, setRememberID] = useState(false);
+	 * const [rememberID, setRememberID] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (rememberID) {
@@ -40,7 +40,7 @@ const PlayerSelection = () => {
 			inputRef.current.focus();
 		}
 	}, []);
-	const [showCopiedAlert, setShowCopiedAlert] = useState(false);
+	const [showCopiedAlert, setShowCopiedAlert] = useState<boolean>(false);
 
 	const copyInviteLink = async () => {
 		try {

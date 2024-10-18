@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC } from "react";
 import profileIcon from "../images/person-circle-outline.svg";
 import Axios from "axios";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import { useSearchParams } from "react-router-dom";
 import imageIcon from "../images/image-outline.svg";
 
@@ -28,7 +28,7 @@ const EditProfile: FC<Props> = ({
 	newBio,
 	setNewBio,
 }) => {
-	const { user } = useCheckContext();
+	const { user } = useContextProvider();
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return;

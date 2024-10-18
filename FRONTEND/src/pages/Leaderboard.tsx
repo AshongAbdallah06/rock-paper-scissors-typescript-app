@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 import logo from "../images/logo.svg";
 import filterLogo from "../images/filter-outline.svg";
 import back from "../images/arrow-back-outline.svg";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import useFunctions from "../hooks/useFunctions";
 import ScoresDisplay from "../components/Scores";
 import FilterDropdown from "../components/FilterDropdown";
 
 const Leaderboard = () => {
-	const { setScores, socket, user } = useCheckContext();
+	const { setScores, socket, user } = useContextProvider();
 	const { getAllScores, getStorageItem } = useFunctions();
 
 	const [optChanges, setOptChanges] = useState<string | null>(
 		getStorageItem("optChanges", "losses")
 	);
 
-	const [renderRoutes, setRenderRoutes] = useState(false);
+	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 	useEffect(() => {
 		getAllScores(socket, setScores);
 
@@ -32,7 +32,7 @@ const Leaderboard = () => {
 		localStorage.setItem("optChanges", JSON.stringify(optChanges));
 	}, [optChanges]);
 
-	const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+	const [showFilterDropdown, setShowFilterDropdown] = useState<boolean>(false);
 
 	return (
 		<>

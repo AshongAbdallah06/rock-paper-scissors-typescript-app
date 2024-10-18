@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import Axios from "axios";
 import closeIcon from "../images/icon-close nav.svg";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const DualPlayerStats: FC<Props> = ({ setShowDualPlayerStats }) => {
-	const { getPlayerStats, dualPlayerStats, p1Username, p2Username, user } = useCheckContext();
+	const { getPlayerStats, dualPlayerStats, p1Username, p2Username, user } = useContextProvider();
 
 	const [twoUsersDetected, setTwoUsersDetected] = useState<boolean | null>(null);
 
@@ -18,8 +18,8 @@ const DualPlayerStats: FC<Props> = ({ setShowDualPlayerStats }) => {
 	const getUserProfiles = async () => {
 		try {
 			const res = await Axios.post(
-				"https://rock-paper-scissors-app-iybf.onrender.com/api/user/profiles",
-				// "http://localhost:4001/api/user/profiles",
+				// "https://rock-paper-scissors-app-iybf.onrender.com/api/user/profiles",
+				"http://localhost:4001/api/user/profiles",
 				{
 					username:
 						dualPlayerStats?.player1_username !== user?.username

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import profileIcon from "../images/person-circle-outline.svg";
 import logo from "../images/logo.svg";
 import { Link } from "react-router-dom";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import singleIcon from "../images/person-outline-black.svg";
 import dualIcon from "../images/people-outline-black.svg";
 import useFunctions from "../hooks/useFunctions";
@@ -10,9 +10,9 @@ import Axios from "axios";
 import { OpponentInfo } from "../Types";
 
 const Profile = () => {
-	const { selectedUserStats } = useCheckContext();
+	const { selectedUserStats } = useContextProvider();
 	const { allGamesPlayed, allLosses, allTies, allWins, getAllDualPlayerStats } = useFunctions();
-	const [renderRoutes, setRenderRoutes] = useState(false);
+	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 
 	useEffect(() => {
 		localStorage.setItem("selectedUser", JSON.stringify(selectedUserStats));

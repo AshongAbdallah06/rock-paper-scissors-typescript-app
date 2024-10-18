@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 
 type Message = { username: string; textMessage: string };
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const AlertComponent: FC<Props> = ({ message, message1, setChatIsShowing, messages }) => {
-	const { user } = useCheckContext();
+	const { user } = useContextProvider();
 	const [isNotificationAlert, setIsNotificationAlert] = useState<boolean>(false);
 	const [isEqual, setIsEqual] = useState<boolean>(false);
 

@@ -17,9 +17,9 @@ import { ContextType, Props } from "../Interfaces";
 const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
 // const socket = io("http://localhost:4001");
 
-export const CheckContext = createContext<ContextType | undefined>(undefined);
+export const ContextProvider = createContext<ContextType | undefined>(undefined);
 
-const CheckContextProvider: FC<Props> = ({ children }) => {
+const Context: FC<Props> = ({ children }) => {
 	const {
 		checkPlayersMoves,
 		checkOptions,
@@ -134,7 +134,7 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	}, [socket]);
 
 	const [bonusState, setBonusState] = useState<boolean | "setting">(
-		JSON.parse(localStorage.getItem("bonus") || "")
+		getStorageItem("bonus", false)
 	);
 
 	useEffect(() => {
@@ -350,7 +350,7 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 	}, [socket, result, playerMove]);
 
 	return (
-		<CheckContext.Provider
+		<ContextProvider.Provider
 			value={{
 				playerMove,
 				computerMove,
@@ -401,8 +401,8 @@ const CheckContextProvider: FC<Props> = ({ children }) => {
 			}}
 		>
 			{children}
-		</CheckContext.Provider>
+		</ContextProvider.Provider>
 	);
 };
 
-export default CheckContextProvider;
+export default Context;

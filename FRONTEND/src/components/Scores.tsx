@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, useEffect, useState } from "react";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import { Link, useSearchParams } from "react-router-dom";
 import { Scores } from "../Types";
 
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ScoresDisplay: FC<Props> = ({ optChanges }) => {
-	const { scores, getUserStats, setScores, socket, user } = useCheckContext();
+	const { scores, getUserStats, setScores, socket, user } = useContextProvider();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 

@@ -3,7 +3,7 @@ import Dialog from "../components/Dialog";
 import Chat from "../components/Chat";
 import ScoreBoard from "../components/ScoreBoard";
 import GameBoard from "../GameBoard";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 import BonusDialog from "../components/bonus/Dialog";
 import Nav from "../components/Nav";
 import useFunctions from "../hooks/useFunctions";
@@ -14,7 +14,7 @@ import { MessageType } from "../Types";
 import ChangeMode from "../components/ChangeMode";
 
 const Home = () => {
-	const [chatIsShowing, setChatIsShowing] = useState(false);
+	const [chatIsShowing, setChatIsShowing] = useState<boolean>(false);
 	const {
 		isOnePlayer,
 		moveAck,
@@ -26,14 +26,14 @@ const Home = () => {
 		setAlertCounter,
 		roomID,
 		bonusState,
-	} = useCheckContext();
-	const { joinRoom, getStorageItem } = useFunctions();
+	} = useContextProvider();
+	const { getStorageItem } = useFunctions();
 
 	useEffect(() => {
 		localStorage.setItem("player-mode", JSON.stringify(isOnePlayer ? "single" : "dual"));
 	}, [isOnePlayer]);
 
-	const [showWhoLeft, setShowWhoLeft] = useState(false);
+	const [showWhoLeft, setShowWhoLeft] = useState<boolean>(false);
 
 	const hasLeftRoom = leftRoom && leftRoom.includes("has left the room");
 	useEffect(() => {
@@ -77,7 +77,7 @@ const Home = () => {
 		};
 	}, []);
 
-	const [messages, setMessages] = useState(
+	const [messages, setMessages] = useState<MessageType[]>(
 		getStorageItem(`room-${roomID}-${user.username}-messages`, [])
 	);
 

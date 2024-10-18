@@ -21,7 +21,7 @@ const Help = () => {
 		}
 	}, [page]);
 
-	const [renderRoutes, setRenderRoutes] = useState(false);
+	const [renderRoutes, setRenderRoutes] = useState<boolean>(false);
 	useEffect(() => {
 		setRenderRoutes(false);
 		const timer = setTimeout(() => {

@@ -1,10 +1,10 @@
 import React from "react";
 import modalImage from "../images/image-rules.svg";
 import closeIcon from "../images/icon-close.svg";
-import useCheckContext from "../hooks/useCheckContext";
+import useContextProvider from "../hooks/useContextProvider";
 
 const Dialog = () => {
-	const { isRulesModalShow, setIsRulesModalShow } = useCheckContext();
+	const { isRulesModalShow, setIsRulesModalShow } = useContextProvider();
 
 	const closeModal = () => {
 		setIsRulesModalShow(false);
