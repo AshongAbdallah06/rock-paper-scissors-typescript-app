@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import spockIcon from "../../images/icon-spock.svg";
 import useContextProvider from "../../hooks/useContextProvider";
 import useFunctions from "../../hooks/useFunctions";

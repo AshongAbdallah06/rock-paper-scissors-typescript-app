@@ -17,23 +17,6 @@ const PlayerSelection = () => {
 	} = useContextProvider();
 	const { joinRoom } = useFunctions();
 
-	/**todo: create remember id functionality 
-	 * const [rememberID, setRememberID] = useState<boolean>(false);
-
-	useEffect(() => {
-		if (rememberID) {
-			localStorage.setItem("room-id", JSON.stringify(roomID));
-		} else {
-			localStorage.removeItem("room-id");
-		}
-	}, [rememberID]);
-
-	useEffect(() => {
-		if (rememberID) {
-			localStorage.setItem("room-id", JSON.stringify(roomID));
-		}
-	}, [roomID]);*/
-
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	useEffect(() => {
 		if (inputRef.current) {

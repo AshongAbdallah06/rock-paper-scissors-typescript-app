@@ -39,8 +39,6 @@ const Footer: FC<Props> = ({
 		setPlayerIsChosen,
 		bonusState,
 		setBonusState,
-		p1Username,
-		p2Username,
 	} = useContextProvider();
 	const { leaveRoom, logout } = useFunctions();
 

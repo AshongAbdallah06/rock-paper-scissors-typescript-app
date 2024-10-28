@@ -26,7 +26,7 @@ export type CurrentUserStats = {
 	wins: number;
 	losses: number;
 	ties: number;
-	lastPlayed: string | null;
+	lastPlayed: string | number | Date;
 };
 export type DualPlayerStats = {
 	player1_username: string | null;
@@ -40,7 +40,7 @@ export type DualPlayerStats = {
 };
 export type UserStats = {
 	games_played: number;
-	last_played: string | null;
+	last_played: string | number | Date;
 	losses: number;
 	score: number;
 	ties: number;
@@ -57,7 +57,7 @@ export type Usernames = {
 export type GetUserStatsData = {
 	score: number;
 	games_played: number;
-	last_played: string | null;
+	last_played: string | number | Date;
 	losses: number;
 	ties: number;
 	wins: number;

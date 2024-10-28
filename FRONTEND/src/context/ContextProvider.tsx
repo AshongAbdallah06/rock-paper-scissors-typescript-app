@@ -14,8 +14,8 @@ import {
 } from "../Types";
 import { ContextType, Props } from "../Interfaces";
 
-const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
-// const socket = io("http://localhost:4001");
+// const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
+const socket = io("http://localhost:4001");
 
 export const ContextProvider = createContext<ContextType | undefined>(undefined);
 
@@ -66,7 +66,7 @@ const Context: FC<Props> = ({ children }) => {
 		wins: 0,
 		losses: 0,
 		ties: 0,
-		lastPlayed: null,
+		lastPlayed: "",
 	});
 	const [dualPlayerStats, setDualPlayerStats] = useState<DualPlayerStats | null>({
 		player1_username: usernames?.p1Username,
@@ -176,8 +176,8 @@ const Context: FC<Props> = ({ children }) => {
 	const getUserStats = async (username: string) => {
 		try {
 			const res = await Axios.get(
-				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/${username}`
-				// `http://localhost:4001/api/user/stats/${username}`
+				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/${username}`
+				`http://localhost:4001/api/user/stats/${username}`
 			);
 
 			const data: GetUserStatsData = res?.data[0] || {};
@@ -208,6 +208,7 @@ const Context: FC<Props> = ({ children }) => {
 			alert("No user present");
 			return;
 		}
+
 		if (
 			isOnePlayer &&
 			currentUserStats.username === user?.username &&
@@ -220,8 +221,8 @@ const Context: FC<Props> = ({ children }) => {
 	const getPlayerStats = async (p1Username: string, p2Username: string) => {
 		try {
 			const res = await Axios.post(
-				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats`,
-				// `http://localhost:4001/api/user/stats`,
+				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats`,
+				`http://localhost:4001/api/user/stats`,
 				{
 					p1Username,
 					p2Username,
@@ -257,10 +258,13 @@ const Context: FC<Props> = ({ children }) => {
 
 				if (result === "Tie") {
 					updatedStats.ties = (updatedStats.ties || 0) + 1;
+					updatedStats.lastPlayed = new Date().toISOString();
 				} else if (result === "Player wins") {
 					updatedStats.wins = (updatedStats.wins || 0) + 1;
+					updatedStats.lastPlayed = new Date().toISOString();
 				} else if (result === "Computer wins") {
 					updatedStats.losses = (updatedStats.losses || 0) + 1;
+					updatedStats.lastPlayed = new Date().toISOString();
 				}
 
 				updatedStats.gamesPlayed =
@@ -331,8 +335,8 @@ const Context: FC<Props> = ({ children }) => {
 	const authorize = async () => {
 		try {
 			await Axios.get(
-				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/${user?.username}`,
-				// `http://localhost:4001/api/user/${user?.username}`,
+				// `https://rock-paper-scissors-app-iybf.onrender.com/api/user/${user?.username}`,
+				`http://localhost:4001/api/user/${user?.username}`,
 				{
 					headers: { Authorization: `Bearer ${user.token ? user.token : token}` },
 				}

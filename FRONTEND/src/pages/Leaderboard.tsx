@@ -89,7 +89,11 @@ const Leaderboard = () => {
 							)}
 						</header>
 
-						<div className="header-labels">
+						<div
+							className={`header-labels ${
+								optChanges === "games_played" && "two-grid"
+							}`}
+						>
 							<p>Username</p>
 							<p>
 								{(!optChanges || optChanges) === "wins" && "Wins"}
@@ -97,7 +101,7 @@ const Leaderboard = () => {
 								{optChanges === "ties" && "Ties"}
 								{optChanges === "games_played" && "Games Played"}
 							</p>
-							<p>Percent %</p>
+							{optChanges !== "games_played" ? <p>Percent %</p> : ""}
 						</div>
 
 						<ScoresDisplay optChanges={optChanges} />

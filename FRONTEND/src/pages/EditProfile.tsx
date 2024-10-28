@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import profileIcon from "../images/person-circle-outline.svg";
 import Axios from "axios";
 import useContextProvider from "../hooks/useContextProvider";
@@ -29,6 +29,7 @@ const EditProfile: FC<Props> = ({
 	setNewBio,
 }) => {
 	const { user } = useContextProvider();
+	const [changed, setChanged] = useState(false);
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return;
@@ -39,15 +40,22 @@ const EditProfile: FC<Props> = ({
 			reader.readAsDataURL(file); // Read file as data URL
 			reader.onloadend = () => {
 				setImg(reader.result as string); // Set image URL
+				setChanged(true); // Mark as changed
 			};
 		}
 	};
 
+	const handleInputChange = (setter: (value: any) => void, value: any) => {
+		setter(value);
+		setChanged(true); // Mark as changed
+	};
+
+	const [searchParams, setSearchParams] = useSearchParams("");
+
 	const updateProfile = async () => {
 		try {
 			const res = await Axios.patch(
-				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/edit/profile/${user?.username}`,
-				// `http://localhost:4001/api/user/edit/profile/${user?.username}`,
+				`http://localhost:4001/api/user/edit/profile/${user?.username}`,
 				{
 					img,
 					location: newLocation ? newLocation.trim() : "",
@@ -61,6 +69,7 @@ const EditProfile: FC<Props> = ({
 				localStorage.setItem("user", JSON.stringify(updatedUser));
 				setEdit(false);
 
+				setChanged(false);
 				setNewAge(updatedUser?.age);
 				setNewLocation(updatedUser?.location);
 				setNewBio(updatedUser?.bio);
@@ -72,8 +81,6 @@ const EditProfile: FC<Props> = ({
 			console.log(error);
 		}
 	};
-
-	const [searchParams, setSearchParams] = useSearchParams("");
 
 	return (
 		<div className="edit-container">
@@ -94,7 +101,7 @@ const EditProfile: FC<Props> = ({
 					/>
 					<input
 						type="file"
-						onChange={(e) => handleFileChange(e)}
+						onChange={handleFileChange}
 						title="Select a photo"
 					/>
 				</div>
@@ -103,23 +110,8 @@ const EditProfile: FC<Props> = ({
 			<div className="edit-profile-container">
 				<form
 					className="edit-profile-form"
-					onSubmit={(e) => {
-						e.preventDefault();
-					}}
+					onSubmit={(e) => e.preventDefault()}
 				>
-					{/* <div className="form-group">
-						<label htmlFor="name">Username</label>
-						<input
-							type="text"
-							id="name"
-							name="name"
-							defaultValue={user?.username}
-							placeholder="Enter your username"
-							required
-							onChange={(e) => setNewUsername(e.target.value)}
-						/>
-					</div> */}
-
 					<div className="form-group shared">
 						<div>
 							<label htmlFor="location">Location</label>
@@ -129,7 +121,7 @@ const EditProfile: FC<Props> = ({
 								name="location"
 								placeholder="Enter your location"
 								defaultValue={newLocation || ""}
-								onChange={(e) => setNewLocation(e.target.value)}
+								onChange={(e) => handleInputChange(setNewLocation, e.target.value)}
 							/>
 						</div>
 						<div>
@@ -142,7 +134,9 @@ const EditProfile: FC<Props> = ({
 								max={99}
 								placeholder="Enter your age"
 								defaultValue={newAge || 18}
-								onChange={(e) => setNewAge(Number(e.target.value))}
+								onChange={(e) =>
+									handleInputChange(setNewAge, Number(e.target.value))
+								}
 							/>
 						</div>
 					</div>
@@ -156,29 +150,24 @@ const EditProfile: FC<Props> = ({
 							rows={3}
 							defaultValue={newBio || ""}
 							maxLength={255}
-							onChange={(e) => setNewBio(e.target.value)}
+							onChange={(e) => handleInputChange(setNewBio, e.target.value)}
 						/>
 					</div>
 
 					<div className="buttons">
 						<button
-							type="submit"
+							type="button"
 							className="btn back-btn"
 							onClick={() => {
 								setEdit(false);
-								setSearchParams((params) => ({
-									...params,
-								}));
+								setSearchParams((params) => ({ ...params }));
 							}}
 						>
 							Cancel
 						</button>
-						{(img !== user?.image ||
-							(newLocation && newLocation.trim() !== user?.location) ||
-							newAge !== user?.age ||
-							(newBio && newBio.trim() !== user?.bio)) && (
+						{changed && (
 							<button
-								type="submit"
+								type="button"
 								className="btn save-btn"
 								onClick={() => updateProfile()}
 							>

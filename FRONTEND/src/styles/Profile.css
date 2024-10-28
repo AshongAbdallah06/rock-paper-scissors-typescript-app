@@ -60,13 +60,11 @@ input[type="file"] {
 }
 
 .profile-name {
-	font-size: 28px;
 	margin: 0;
-	font-weight: normal;
 	font-family: "Heebo", sans-serif;
 	text-align: center;
-	margin-bottom: 20px;
 	color: #2c3e50;
+	font-weight: bold;
 }
 
 .age {
@@ -77,14 +75,13 @@ input[type="file"] {
 .profile-location {
 	font-size: 16px;
 	color: #7f8c8d;
-	margin: 5px 0;
+	font-weight: bold;
 }
 
 .profile-bio {
 	font-size: 18px;
 	color: #2c3e50;
-	margin-bottom: 20px;
-	padding: 0 4rem;
+	/* font-weight: bold; */
 }
 
 .profile-stats {

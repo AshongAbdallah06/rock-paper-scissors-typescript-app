@@ -82,7 +82,7 @@ const ScoresDisplay: FC<Props> = ({ optChanges }) => {
 								color: user?.username === score?.username && "black",
 							} as CSSProperties
 						}
-						className="user"
+						className={`user ${optChanges === "games_played" && "two-grid"}`}
 						key={score?.username}
 						onClick={() => {
 							getUserStats(score?.username);
@@ -127,16 +127,6 @@ const ScoresDisplay: FC<Props> = ({ optChanges }) => {
 							<span style={{ color: "orange" }}>
 								{score?.ties !== 0 && score?.games_played !== 0
 									? ((score?.ties / score?.games_played) * 100).toFixed(2)
-									: 0}
-								%
-							</span>
-						)}
-
-						{/* GamesPlayedPercentage */}
-						{optChanges === "games_played" && (
-							<span style={{ color: "orange" }}>
-								{score?.games_played !== 0 && score?.games_played !== 0
-									? ((score?.games_played / score?.games_played) * 100).toFixed(2)
 									: 0}
 								%
 							</span>
