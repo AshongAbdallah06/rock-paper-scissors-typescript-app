@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { CurrentUserStats, DualPlayerStats, GameState, Scores, User, UserStats } from "./Types";
+import { DualPlayerStats, GameState, Scores, User, UserStats } from "./Types";
 import { Socket } from "socket.io-client";
 
 export interface Props {
@@ -36,8 +36,8 @@ export interface ContextType {
 	setMoveAck: (value: string | null | "") => void;
 	leftRoom: string | null;
 	setLeftRoom: (value: string) => void;
-	currentUserStats: CurrentUserStats | null;
-	setCurrentUserStats: (value: CurrentUserStats) => void;
+	currentUserStats: UserStats | null;
+	setCurrentUserStats: (value: UserStats) => void;
 	scores: Scores | null;
 	setScores: (value: Scores) => void;
 	getUserStats: (username: string) => void;

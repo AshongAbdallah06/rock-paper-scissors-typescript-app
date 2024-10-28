@@ -26,8 +26,8 @@ export type DualPlayerStats = {
 };
 
 export type UserStats = {
-	gamesPlayed: number;
-	lastPlayed: string | number | Date;
+	games_played: number;
+	last_played: string | number | Date;
 	losses: number;
 	ties: number;
 	username: string;

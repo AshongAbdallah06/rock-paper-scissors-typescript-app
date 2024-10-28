@@ -32,13 +32,13 @@ const Profile = () => {
 	const [newLocation, setNewLocation] = useState<string | null>(user?.location || "");
 	const [newAge, setNewAge] = useState<number | null>(user?.age || null);
 	const [newBio, setNewBio] = useState<string | null>(user?.bio || null);
-	const [lastPlayed, setLastPlayed] = useState<string | number | Date>(user?.bio || "");
+	const [last_played, setLastPlayed] = useState<string | number | Date>(user?.bio || "");
 
 	const [searchParams, setSearchParams] = useSearchParams("");
 
 	useEffect(() => {
-		if (!currentUserStats?.gamesPlayed) return;
-		setLastPlayed(formatDistanceToNow(currentUserStats.lastPlayed, { addSuffix: true }));
+		if (!currentUserStats?.games_played) return;
+		setLastPlayed(formatDistanceToNow(currentUserStats.last_played, { addSuffix: true }));
 	}, [currentUserStats]);
 
 	return (
@@ -75,7 +75,7 @@ const Profile = () => {
 										"I’m a mysterious individual who has yet to fill out my bio. One thing’s for certain: I love to play rock-paper-scissors!"}
 								</p>
 								<p style={{ color: "#dc3545", fontWeight: "bold" }}>
-									Last played: {lastPlayed.toLocaleString()}
+									Last played: {last_played.toLocaleString()}
 								</p>
 							</div>
 
@@ -88,7 +88,7 @@ const Profile = () => {
 									<p>Single</p>
 								</div>
 								<div className="stat-item">
-									<h3>{currentUserStats?.gamesPlayed || 0}</h3>
+									<h3>{currentUserStats?.games_played || 0}</h3>
 									<p>Games Played</p>
 								</div>
 								<div className="stat-item">

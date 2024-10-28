@@ -1,32 +1,21 @@
 export type User = {
+	username: string;
+	email: string | null;
 	age: number;
 	bio: string | null;
-	email: string | null;
 	image: string | null;
 	location: string | null;
 	token: string | null;
-	username: string;
 };
-export type OpponentInfo = {
-	age: number;
-	bio: string | null;
-	email: string | null;
-	image: string | null;
-	location: string | null;
-};
+
+export type OpponentInfo = Omit<User, "token">;
+
 export type GameState = {
 	p1: string | null;
 	p2: string | null;
 	result: string | null;
 };
-export type CurrentUserStats = {
-	username: string;
-	gamesPlayed: number;
-	wins: number;
-	losses: number;
-	ties: number;
-	lastPlayed: string | number | Date;
-};
+
 export type DualPlayerStats = {
 	player1_username: string | null;
 	player1_wins: number;
@@ -37,16 +26,18 @@ export type DualPlayerStats = {
 	ties: number;
 	games_played: number;
 };
+
 export type UserStats = {
+	username: string;
 	games_played: number;
-	last_played: string | number | Date;
+	wins: number;
 	losses: number;
 	ties: number;
-	username: string;
-	wins: number;
+	last_played: string | number | Date;
 };
 
 export type Scores = UserStats[];
+
 export type Usernames = {
 	p1Username: string | null;
 	p2Username: string | null;

@@ -304,11 +304,11 @@ io.on("connect", (socket: Socket) => {
 
 	socket.on(
 		"updateStats",
-		async ({ gamesPlayed, wins, losses, ties, username, lastPlayed }: UserStats) => {
+		async ({ games_played, wins, losses, ties, username, last_played }: UserStats) => {
 			try {
 				await pool.query(
 					`UPDATE SCORES SET GAMES_PLAYED = $1, WINS = $2, LOSSES = $3, TIES = $4, LAST_PLAYED = $5::timestamp with time zone WHERE USERNAME = $6`,
-					[gamesPlayed, wins, losses, ties, lastPlayed, username]
+					[games_played, wins, losses, ties, last_played, username]
 				);
 
 				const response: QueryResult<UserStats> = await pool.query(
