@@ -1,11 +1,24 @@
 require("dotenv").config();
 const express = require("express");
+import { Request, Response } from "express";
+import { Socket } from "socket.io";
+import {
+	CorsCallback,
+	DualPlayerStats,
+	GameResult,
+	GameRooms,
+	MessageType,
+	Move,
+	Usernames,
+	UserStats,
+} from "./Types";
 const http = require("http");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const socketIo = require("socket.io");
 const pool = require("./db");
+import { QueryResult } from "pg";
 const { v4: uuid } = require("uuid");
 
 const app = express();
@@ -20,11 +33,11 @@ const io = socketIo(server, {
 const allowedOrigins = ["http://localhost:3000", "https://rock-paper-scissors-app-nine.vercel.app"];
 
 const corsOptions = {
-	origin: function (origin, callback) {
+	origin: function (origin: string, callback: CorsCallback) {
 		if (!origin || allowedOrigins.indexOf(origin) !== -1) {
 			callback(null, true);
 		} else {
-			callback(new Error("Not allowed by CORS"));
+			callback(new Error("Not allowed by CORS"), false);
 		}
 	},
 	methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
@@ -36,19 +49,19 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const gameRooms = {};
-const game = {};
-let usernames = {};
+const gameRooms: GameRooms = {};
+const gameResult: GameResult = {};
+let usernames: Usernames = {};
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
 	res.json({ msg: "Hello" });
 });
 
-io.on("connect", (socket) => {
-	let roomId;
-	const sqlQuery = `SELECT * FROM DUAL_PLAYER_SCORES WHERE (PLAYER1_USERNAME = $1 AND PLAYER2_USERNAME = $2) OR (PLAYER1_USERNAME = $2 AND PLAYER2_USERNAME = $1)`;
+io.on("connect", (socket: Socket) => {
+	let roomId: string;
+	const sqlQuery: string = `SELECT * FROM DUAL_PLAYER_SCORES WHERE (PLAYER1_USERNAME = $1 AND PLAYER2_USERNAME = $2) OR (PLAYER1_USERNAME = $2 AND PLAYER2_USERNAME = $1)`;
 
-	socket.on("join-room", async ({ id, username }) => {
+	socket.on("join-room", async ({ id, username }: { id: string; username: string }) => {
 		roomId = id;
 		socket.join(roomId);
 
@@ -56,8 +69,8 @@ io.on("connect", (socket) => {
 			gameRooms[roomId] = { p1_ID: null, p2_ID: null };
 		}
 
-		if (!game[roomId]) {
-			game[roomId] = { p1: null, p2: null, result: null };
+		if (!gameResult[roomId]) {
+			gameResult[roomId] = { p1: null, p2: null, result: null };
 		}
 
 		if (!gameRooms[roomId]) {
@@ -80,7 +93,7 @@ io.on("connect", (socket) => {
 			usernames[roomId].p2Username = username;
 
 			try {
-				const response = await pool.query(sqlQuery, [
+				const response: QueryResult<DualPlayerStats> = await pool.query(sqlQuery, [
 					usernames[roomId]?.p1Username,
 					usernames[roomId]?.p2Username,
 				]);
@@ -101,7 +114,7 @@ io.on("connect", (socket) => {
 			}
 		}
 
-		const response = await pool.query(sqlQuery, [
+		const response: QueryResult<DualPlayerStats> = await pool.query(sqlQuery, [
 			usernames[roomId]?.p1Username,
 			usernames[roomId]?.p2Username,
 		]);
@@ -115,11 +128,11 @@ io.on("connect", (socket) => {
 		}
 	});
 
-	socket.on("move-made", (username) => {
+	socket.on("move-made", (username: string) => {
 		socket.broadcast.to(roomId).emit("move-made", { msg: username + " has made a move" });
 	});
 
-	socket.on("leave-room", (username) => {
+	socket.on("leave-room", (username: string) => {
 		// Remove the username from the room
 		if (usernames[roomId]?.p1Username === username) {
 			usernames[roomId].p1Username = null;
@@ -137,106 +150,117 @@ io.on("connect", (socket) => {
 		io.to(roomId).emit("leave-room", { msg: username + " has left the room" });
 	});
 
-	socket.on("move", async ({ username, move }) => {
-		if (!roomId || !game[roomId]) return;
+	socket.on("move", async ({ username, move }: Move) => {
+		if (!roomId || !gameResult[roomId]) return;
 
-		const response = await pool.query(sqlQuery, [
+		const response: QueryResult<DualPlayerStats> = await pool.query(sqlQuery, [
 			usernames[roomId]?.p1Username,
 			usernames[roomId]?.p2Username,
 		]);
 		if (response.rowCount === 1) {
 			if (response.rows[0]?.player1_username === username) {
-				game[roomId].p1 = move;
+				gameResult[roomId].p1 = move;
 			} else if (response?.rows[0].player2_username === username) {
-				game[roomId].p2 = move;
+				gameResult[roomId].p2 = move;
 			}
 		}
 
-		if (game[roomId].p1 && game[roomId].p2) {
-			switch (game[roomId].p1) {
+		if (gameResult[roomId].p1 && gameResult[roomId].p2) {
+			switch (gameResult[roomId].p1) {
 				case "r":
-					game[roomId].result =
-						game[roomId].p2 === "r"
+					gameResult[roomId].result =
+						gameResult[roomId].p2 === "r"
 							? "Tie"
-							: game[roomId].p2 === "p"
+							: gameResult[roomId].p2 === "p"
 							? "Player2 wins"
-							: game[roomId].p2 === "s"
+							: gameResult[roomId].p2 === "s"
 							? "Player1 wins"
-							: game[roomId].p2 === "l"
+							: gameResult[roomId].p2 === "l"
 							? "Player1 wins"
-							: game[roomId].p2 === "sp" && "Player2 wins";
+							: gameResult[roomId].p2 === "sp"
+							? "Player2 wins"
+							: null;
 					break;
 				case "p":
-					game[roomId].result =
-						game[roomId].p2 === "r"
+					gameResult[roomId].result =
+						gameResult[roomId].p2 === "r"
 							? "Player1 wins"
-							: game[roomId].p2 === "p"
+							: gameResult[roomId].p2 === "p"
 							? "Tie"
-							: game[roomId].p2 === "s"
+							: gameResult[roomId].p2 === "s"
 							? "Player2 wins"
-							: game[roomId].p2 === "l"
+							: gameResult[roomId].p2 === "l"
 							? "Player2 wins"
-							: game[roomId].p2 === "sp" && "Player1 wins";
+							: gameResult[roomId].p2 === "sp"
+							? "Player1 wins"
+							: null;
 					break;
 				case "s":
-					game[roomId].result =
-						game[roomId].p2 === "r"
+					gameResult[roomId].result =
+						gameResult[roomId].p2 === "r"
 							? "Player2 wins"
-							: game[roomId].p2 === "p"
+							: gameResult[roomId].p2 === "p"
 							? "Player1 wins"
-							: game[roomId].p2 === "s"
+							: gameResult[roomId].p2 === "s"
 							? "Tie"
-							: game[roomId].p2 === "l"
+							: gameResult[roomId].p2 === "l"
 							? "Player1 wins"
-							: game[roomId].p2 === "sp" && "Player2 wins";
+							: gameResult[roomId].p2 === "sp"
+							? "Player2 wins"
+							: null;
 					break;
 				case "l":
-					game[roomId].result =
-						game[roomId].p2 === "r"
+					gameResult[roomId].result =
+						gameResult[roomId].p2 === "r"
 							? "Player2 wins"
-							: game[roomId].p2 === "p"
+							: gameResult[roomId].p2 === "p"
 							? "Player1 wins"
-							: game[roomId].p2 === "s"
+							: gameResult[roomId].p2 === "s"
 							? "Player2 wins"
-							: game[roomId].p2 === "l"
+							: gameResult[roomId].p2 === "l"
 							? "Tie"
-							: game[roomId].p2 === "sp" && "Player1 wins";
+							: gameResult[roomId].p2 === "sp"
+							? "Player1 wins"
+							: null;
 					break;
 				case "sp":
-					game[roomId].result =
-						game[roomId].p2 === "r"
+					gameResult[roomId].result =
+						gameResult[roomId].p2 === "r"
 							? "Player1 wins"
-							: game[roomId].p2 === "p"
+							: gameResult[roomId].p2 === "p"
 							? "Player2 wins"
-							: game[roomId].p2 === "s"
+							: gameResult[roomId].p2 === "s"
 							? "Player1 wins"
-							: game[roomId].p2 === "l"
+							: gameResult[roomId].p2 === "l"
 							? "Player2 wins"
-							: game[roomId].p2 === "sp" && "Tie";
+							: gameResult[roomId].p2 === "sp"
+							? "Tie"
+							: null;
 					break;
 			}
 
-			io.to(roomId).emit("move", game[roomId]);
+			io.to(roomId).emit("move", gameResult[roomId]);
 		}
 	});
 
 	socket.on("clearMoves", () => {
-		if (roomId && game[roomId]) {
-			game[roomId] = { p1: null, p2: null, result: null };
-			io.to(roomId).emit("clearMoves", game[roomId]);
+		if (roomId && gameResult[roomId]) {
+			gameResult[roomId] = { p1: null, p2: null, result: null };
+			io.to(roomId).emit("clearMoves", gameResult[roomId]);
 		}
 	});
 
-	socket.on("message", async ({ username, textMessage }) => {
+	socket.on("message", async ({ username, textMessage }: MessageType) => {
 		io.to(roomId).emit("message", { username, textMessage });
 	});
 
 	socket.on("getAllScores", async () => {
 		try {
-			const response = await pool.query("SELECT * FROM SCORES ORDER BY WINS DESC");
-			const scores = response.rows;
+			const response: QueryResult<UserStats> = await pool.query(
+				"SELECT * FROM SCORES ORDER BY WINS DESC"
+			);
 
-			io.emit("getAllScores", scores);
+			io.emit("getAllScores", response.rows);
 		} catch (error) {
 			console.error("🚀 ~ getScores ~ error:", error);
 		}
@@ -244,10 +268,11 @@ io.on("connect", (socket) => {
 
 	socket.on("getScoresByLosses", async () => {
 		try {
-			const response = await pool.query("SELECT * FROM SCORES ORDER BY LOSSES DESC");
-			const scores = response.rows;
+			const response: QueryResult<UserStats> = await pool.query(
+				"SELECT * FROM SCORES ORDER BY LOSSES DESC"
+			);
 
-			io.emit("getScoresByLosses", scores);
+			io.emit("getScoresByLosses", response.rows);
 		} catch (error) {
 			console.error("🚀 ~ getScores ~ error:", error);
 		}
@@ -255,10 +280,11 @@ io.on("connect", (socket) => {
 
 	socket.on("getScoresByTies", async () => {
 		try {
-			const response = await pool.query("SELECT * FROM SCORES ORDER BY TIES DESC");
-			const scores = response.rows;
+			const response: QueryResult<UserStats> = await pool.query(
+				"SELECT * FROM SCORES ORDER BY TIES DESC"
+			);
 
-			io.emit("getScoresByTies", scores);
+			io.emit("getScoresByTies", response.rows);
 		} catch (error) {
 			console.error("🚀 ~ getScores ~ error:", error);
 		}
@@ -266,33 +292,37 @@ io.on("connect", (socket) => {
 
 	socket.on("getScoresByGamesPlayed", async () => {
 		try {
-			const response = await pool.query("SELECT * FROM SCORES ORDER BY GAMES_PLAYED DESC");
-			const scores = response.rows;
+			const response: QueryResult<UserStats> = await pool.query(
+				"SELECT * FROM SCORES ORDER BY GAMES_PLAYED DESC"
+			);
 
-			io.emit("getScoresByGamesPlayed", scores);
+			io.emit("getScoresByGamesPlayed", response.rows);
 		} catch (error) {
 			console.error("🚀 ~ getScores ~ error:", error);
 		}
 	});
 
-	socket.on("updateStats", async ({ gamesPlayed, wins, losses, ties, username, lastPlayed }) => {
-		try {
-			await pool.query(
-				`UPDATE SCORES SET GAMES_PLAYED = $1, WINS = $2, LOSSES = $3, TIES = $4, LAST_PLAYED = $5::timestamp with time zone WHERE USERNAME = $6`,
-				[gamesPlayed, wins, losses, ties, lastPlayed, username]
-			);
+	socket.on(
+		"updateStats",
+		async ({ gamesPlayed, wins, losses, ties, username, lastPlayed }: UserStats) => {
+			try {
+				await pool.query(
+					`UPDATE SCORES SET GAMES_PLAYED = $1, WINS = $2, LOSSES = $3, TIES = $4, LAST_PLAYED = $5::timestamp with time zone WHERE USERNAME = $6`,
+					[gamesPlayed, wins, losses, ties, lastPlayed, username]
+				);
 
-			const response = await pool.query("SELECT * FROM SCORES WHERE USERNAME = $1", [
-				username,
-			]);
-			const userStats = response.rows;
-			io.to(roomId).emit("updateStats", userStats);
-		} catch (error) {
-			console.log("🚀 ~ socket.on ~ error:", error);
+				const response: QueryResult<UserStats> = await pool.query(
+					"SELECT * FROM SCORES WHERE USERNAME = $1",
+					[username]
+				);
+				io.to(roomId).emit("updateStats", response.rows);
+			} catch (error) {
+				console.log("🚀 ~ socket.on ~ error:", error);
+			}
 		}
-	});
+	);
 
-	socket.on("updateDualPlayerStats", async (data) => {
+	socket.on("updateDualPlayerStats", async (data: DualPlayerStats) => {
 		try {
 			await pool.query(
 				`UPDATE DUAL_PLAYER_SCORES SET GAMES_PLAYED = $1, TIES = $2 WHERE (PLAYER1_USERNAME = $3 AND PLAYER2_USERNAME = $4) OR (PLAYER1_USERNAME = $4 AND PLAYER2_USERNAME = $3)`,
@@ -348,7 +378,7 @@ io.on("connect", (socket) => {
 			if (!players.p1_ID && !players.p2_ID) {
 				delete gameRooms[room];
 				delete usernames[room];
-				delete game[room];
+				delete gameResult[room];
 			}
 		}
 	});

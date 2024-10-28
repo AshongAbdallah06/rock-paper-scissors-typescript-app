@@ -1,4 +1,4 @@
-import React, { createContext, FC, useEffect, useState } from "react";
+import { createContext, FC, useEffect, useState } from "react";
 import io from "socket.io-client";
 import Axios from "axios";
 import useFunctions from "../hooks/useFunctions";
@@ -10,7 +10,6 @@ import {
 	UserStats,
 	Scores,
 	Usernames,
-	GetUserStatsData,
 } from "../Types";
 import { ContextType, Props } from "../Interfaces";
 
@@ -60,7 +59,6 @@ const Context: FC<Props> = ({ children }) => {
 	const usernames: Usernames = getStorageItem("usernames", null);
 
 	const [currentUserStats, setCurrentUserStats] = useState<CurrentUserStats | null>({
-		score: 0,
 		username: user?.username,
 		gamesPlayed: 0,
 		wins: 0,
@@ -180,12 +178,11 @@ const Context: FC<Props> = ({ children }) => {
 				`http://localhost:4001/api/user/stats/${username}`
 			);
 
-			const data: GetUserStatsData = res?.data[0] || {};
+			const data: UserStats = res?.data[0] || {};
 
 			if (username === user?.username) {
 				setCurrentUserStats({
 					...currentUserStats,
-					score: data.score || 0,
 					gamesPlayed: data.games_played || 0,
 					lastPlayed: data.last_played,
 					losses: data.losses || 0,
@@ -245,9 +242,7 @@ const Context: FC<Props> = ({ children }) => {
 	useEffect(() => {
 		if (isOnePlayer) {
 			setCurrentUserStats((prevStats: CurrentUserStats | null) => {
-				// let updatedStats = { ...prevStats };
 				let updatedStats = {
-					score: prevStats?.score || 0,
 					username: user?.username || "",
 					gamesPlayed: prevStats?.gamesPlayed || 0,
 					wins: prevStats?.wins || 0,

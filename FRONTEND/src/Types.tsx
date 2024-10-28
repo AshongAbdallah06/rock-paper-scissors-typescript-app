@@ -20,7 +20,6 @@ export type GameState = {
 	result: string | null;
 };
 export type CurrentUserStats = {
-	score: number;
 	username: string;
 	gamesPlayed: number;
 	wins: number;
@@ -42,7 +41,6 @@ export type UserStats = {
 	games_played: number;
 	last_played: string | number | Date;
 	losses: number;
-	score: number;
 	ties: number;
 	username: string;
 	wins: number;
@@ -54,13 +52,4 @@ export type Usernames = {
 	p2Username: string | null;
 };
 
-export type GetUserStatsData = {
-	score: number;
-	games_played: number;
-	last_played: string | number | Date;
-	losses: number;
-	ties: number;
-	wins: number;
-	username: string;
-};
 export type MessageType = { username: string; textMessage: string };

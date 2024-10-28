@@ -2,8 +2,11 @@ const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const { v4: uuid } = require("uuid");
 const { genSalt, hash, compare } = require("bcrypt");
+import { Request, Response } from "express";
+import { UserInterface, UserStats } from "../Types";
+import { QueryResult } from "pg";
 
-const handleErrors = (err) => {
+const handleErrors = (err: any) => {
 	const errors = { email: "", username: "", password: "" };
 
 	if (err.message.includes("duplicate") && err.message.includes("email")) {
@@ -23,18 +26,18 @@ const handleErrors = (err) => {
 	return errors;
 };
 
-const createToken = (id) => {
+const createToken = (id: string) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "50d" });
 };
 
-const signup = async (req, res) => {
+const signup = async (req: Request, res: Response) => {
 	const id = uuid();
 	const { email, username, password } = req.body;
 	const salt = await genSalt(10);
 	const hashedPassword = await hash(password, salt);
 
 	try {
-		const lowercasedEmail = email.trim().toLowerCase();
+		const lowercasedEmail: string = email.trim().toLowerCase();
 
 		await pool.query(`INSERT INTO USERS VALUES ($1, $2, $3, $4)`, [
 			id,
@@ -43,14 +46,18 @@ const signup = async (req, res) => {
 			hashedPassword,
 		]);
 
-		const userExist = await pool.query(`SELECT * FROM SCORES WHERE USERNAME = $1`, [username]);
-		if (userExist.rowCount < 1) {
+		const userExist: QueryResult<UserStats> = await pool.query(
+			`SELECT * FROM SCORES WHERE USERNAME = $1`,
+			[username]
+		);
+
+		if (userExist!.rowCount! < 1) {
 			await pool.query(
 				`INSERT INTO SCORES(username, wins, losses, ties, games_played) VALUES ($1, $2, $3, $4, $5)`,
 				[username, 0, 0, 0, 0]
 			);
 		}
-		const userResult = await pool.query(
+		const userResult: QueryResult<UserInterface> = await pool.query(
 			`SELECT ID, USERNAME, PASSWORD, EMAIL, AGE, LOCATION, BIO, IMAGE FROM USERS WHERE LOWER(EMAIL) = $1`,
 			[lowercasedEmail]
 		);
@@ -75,7 +82,7 @@ const signup = async (req, res) => {
 	}
 };
 
-const editProfile = async (req, res) => {
+const editProfile = async (req: Request, res: Response) => {
 	const { img, location, age, bio } = req.body;
 	const { username } = req.params;
 
@@ -85,7 +92,10 @@ const editProfile = async (req, res) => {
 			[img, location, age, bio, username]
 		);
 
-		const userResult = await pool.query(`SELECT * FROM USERS WHERE username = $1`, [username]);
+		const userResult: QueryResult<UserInterface> = await pool.query(
+			`SELECT * FROM USERS WHERE username = $1`,
+			[username]
+		);
 
 		if (userResult.rowCount === 1) {
 			res.status(200).json(userResult.rows[0]);
@@ -97,10 +107,10 @@ const editProfile = async (req, res) => {
 	}
 };
 
-const getUserProfiles = async (req, res) => {
+const getUserProfiles = async (req: Request, res: Response) => {
 	const { username } = req.body;
 	try {
-		const userProfiles = await pool.query(
+		const userProfiles: QueryResult<UserInterface> = await pool.query(
 			`SELECT USERNAME, EMAIL, AGE, LOCATION, BIO, IMAGE FROM USERS WHERE USERNAME = $1`,
 			[username]
 		);
@@ -110,14 +120,14 @@ const getUserProfiles = async (req, res) => {
 	}
 };
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 
 	try {
 		// Convert email to lowercase before querying
 		const lowercasedEmail = email.trim().toLowerCase();
 
-		const userResult = await pool.query(
+		const userResult: QueryResult<UserInterface> = await pool.query(
 			`SELECT ID, USERNAME, PASSWORD, EMAIL, AGE, LOCATION, BIO, IMAGE FROM USERS WHERE LOWER(EMAIL) = $1`,
 			[lowercasedEmail]
 		);

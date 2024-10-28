@@ -1,5 +1,5 @@
+import { requireAuth } from "../middleware/authMiddleware";
 const { Router } = require("express");
-const { requireAuth } = require("../middleware/authMiddleware");
 const {
 	getHome,
 	getUserStats,
@@ -12,6 +12,6 @@ router.get("/stats/:username", getUserStats);
 router.get("/stats/dual-player/:username", getUserDualPlayerStats);
 router.post("/stats", getPlayerStats);
 
-router.get("/:username", requireAuth, getHome);
+router.get("*", requireAuth, getHome);
 
 module.exports = router;
