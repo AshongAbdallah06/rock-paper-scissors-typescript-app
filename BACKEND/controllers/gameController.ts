@@ -48,7 +48,7 @@ const getPlayerStats = async (req: Request, res: Response) => {
 	}
 };
 
-const getUserDualPlayerStats = async (req: Request, res: Response) => {
+const getAllDualPlayerStats = async (req: Request, res: Response) => {
 	const { username } = req.params;
 
 	try {
@@ -65,4 +65,4 @@ const getUserDualPlayerStats = async (req: Request, res: Response) => {
 	}
 };
 
-module.exports = { getHome, getUserStats, getPlayerStats, getUserDualPlayerStats };
+module.exports = { getHome, getUserStats, getPlayerStats, getAllDualPlayerStats };

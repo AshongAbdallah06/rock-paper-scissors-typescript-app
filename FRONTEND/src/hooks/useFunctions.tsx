@@ -291,13 +291,13 @@ const useFunctions = () => {
 	let totalLosses = 0;
 	let totalTies = 0;
 
-	const getAllDualPlayerStats = async (username: string) => {
+	const getAllDualPlayerStats = async (
+		username: string
+	): Promise<DualPlayerStats | undefined> => {
 		try {
 			const response = await Axios.get(
 				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/dual-player/${username}`
-				// `http://localhost:4001/api/user/stats/dual-player/${username}`
 			);
-
 			const data = response.data;
 
 			data.forEach((stat: DualPlayerStats) => {
@@ -316,6 +316,8 @@ const useFunctions = () => {
 				setAllLosses(totalLosses ? totalLosses : 0);
 				setAllTies(totalTies ? totalTies : 0);
 			});
+
+			return;
 		} catch (err) {
 			console.log(err);
 		}

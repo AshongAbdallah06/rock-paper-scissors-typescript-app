@@ -4,12 +4,12 @@ const {
 	getHome,
 	getUserStats,
 	getPlayerStats,
-	getUserDualPlayerStats,
+	getAllDualPlayerStats,
 } = require("../controllers/gameController");
 const router = Router();
 
 router.get("/stats/:username", getUserStats);
-router.get("/stats/dual-player/:username", getUserDualPlayerStats);
+router.get("/stats/dual-player/:username", getAllDualPlayerStats);
 router.post("/stats", getPlayerStats);
 
 router.get("*", requireAuth, getHome);

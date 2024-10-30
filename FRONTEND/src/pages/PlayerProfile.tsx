@@ -30,7 +30,6 @@ const Profile = () => {
 
 			if (opponentData) {
 				setOpponentProfile(opponentData[0]);
-				console.log("opponentProfile: ", opponentProfile);
 			}
 		} catch (error: any) {
 			if (error?.response?.status === 413) {

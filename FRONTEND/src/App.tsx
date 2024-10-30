@@ -64,7 +64,7 @@ const Loading: FC<LoadingProps> = ({ isRendered, setIsRendered, children }) => {
 
 		const timer = setTimeout(() => {
 			setIsRendered(true);
-		}, 2000);
+		}, 1000);
 
 		return () => clearTimeout(timer);
 	}, [location.pathname]);
@@ -85,7 +85,7 @@ const LoadingApp: FC<LoadingAppProps> = ({ isAppRendered, setIsAppRendered, chil
 
 		const timer = setTimeout(() => {
 			setIsAppRendered(true);
-		}, 2000);
+		}, 500);
 
 		return () => clearTimeout(timer);
 	}, []);
@@ -95,7 +95,6 @@ const LoadingApp: FC<LoadingAppProps> = ({ isAppRendered, setIsAppRendered, chil
 	) : (
 		<>
 			<Logo />
-			<Loader />
 		</>
 	);
 };
