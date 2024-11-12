@@ -3,8 +3,8 @@ const pool = require("../db");
 const { v4: uuid } = require("uuid");
 const { genSalt, hash, compare } = require("bcrypt");
 import { Request, Response } from "express";
-import { UserInterface, UserStats } from "../Types";
 import { QueryResult } from "pg";
+import { UserInterface, UserStats } from "../Types";
 
 const handleErrors = (err: any) => {
 	const errors = { email: "", username: "", password: "" };
@@ -92,12 +92,13 @@ const editProfile = async (req: Request, res: Response) => {
 			[img, location, age, bio, username]
 		);
 
-		const userResult: QueryResult<UserInterface> = await pool.query(
-			`SELECT * FROM USERS WHERE username = $1`,
+		const userResult: QueryResult<Omit<UserInterface, "password">> = await pool.query(
+			`SELECT AGE, BIO, EMAIL, ID, IMAGE, LOCATION, USERNAME FROM USERS WHERE username = $1`,
 			[username]
 		);
 
 		if (userResult.rowCount === 1) {
+			console.log(userResult.rows[0]);
 			res.status(200).json(userResult.rows[0]);
 		}
 	} catch (err) {

@@ -1,9 +1,9 @@
+import Axios from "axios";
 import { createContext, FC, useEffect, useState } from "react";
 import io from "socket.io-client";
-import Axios from "axios";
 import useFunctions from "../hooks/useFunctions";
-import { User, GameState, DualPlayerStats, UserStats, Scores, Usernames } from "../Types";
 import { ContextType, Props } from "../Interfaces";
+import { DualPlayerStats, GameState, Scores, User, Usernames, UserStats } from "../Types";
 
 const socket = io("https://rock-paper-scissors-app-iybf.onrender.com");
 // const socket = io("http://localhost:4001");

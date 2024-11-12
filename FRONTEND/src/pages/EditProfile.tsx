@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FC, useState } from "react";
-import profileIcon from "../images/person-circle-outline.svg";
 import Axios from "axios";
-import useContextProvider from "../hooks/useContextProvider";
+import { ChangeEvent, FC, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import useContextProvider from "../hooks/useContextProvider";
 import imageIcon from "../images/image-outline.svg";
+import profileIcon from "../images/person-circle-outline.svg";
 
 interface Props {
 	setEdit: (value: boolean) => void;
@@ -31,16 +31,17 @@ const EditProfile: FC<Props> = ({
 	const { user } = useContextProvider();
 	const [changed, setChanged] = useState(false);
 
+	const [tempImg, setTempImg] = useState<string | null>(img); // Temporary image for preview
+
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.files) return;
-
-		const file = e.target.files[0]; // Get the selected file
+		const file = e.target.files[0];
 		if (file) {
 			const reader = new FileReader();
-			reader.readAsDataURL(file); // Read file as data URL
+			reader.readAsDataURL(file);
 			reader.onloadend = () => {
-				setImg(reader.result as string); // Set image URL
-				setChanged(true); // Mark as changed
+				setTempImg(reader.result as string);
+				setChanged(true);
 			};
 		}
 	};
@@ -55,9 +56,10 @@ const EditProfile: FC<Props> = ({
 	const updateProfile = async () => {
 		try {
 			const res = await Axios.patch(
-				`http://localhost:4001/api/user/edit/profile/${user?.username}`,
+				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/edit/profile/${user?.username}`,
+				// `http://localhost:4001/api/user/edit/profile/${user?.username}`,
 				{
-					img,
+					img: tempImg,
 					location: newLocation ? newLocation.trim() : "",
 					age: newAge,
 					bio: newBio ? newBio.trim() : "",
@@ -73,6 +75,7 @@ const EditProfile: FC<Props> = ({
 				setNewAge(updatedUser?.age);
 				setNewLocation(updatedUser?.location);
 				setNewBio(updatedUser?.bio);
+				setImg(updatedUser.image);
 			}
 		} catch (error: any) {
 			if (error?.response?.status === 413) {
@@ -95,7 +98,7 @@ const EditProfile: FC<Props> = ({
 						Select a photo
 					</div>
 					<img
-						src={img || profileIcon}
+						src={tempImg || profileIcon}
 						alt="Profile"
 						className="profile-pic"
 					/>

@@ -1,13 +1,13 @@
+import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import useContextProvider from "../hooks/useContextProvider";
+import useFunctions from "../hooks/useFunctions";
+import logo from "../images/logo.svg";
+import dualIcon from "../images/people-outline-black.svg";
 import profileIcon from "../images/person-circle-outline.svg";
 import singleIcon from "../images/person-outline-black.svg";
-import dualIcon from "../images/people-outline-black.svg";
-import logo from "../images/logo.svg";
-import { Link, useSearchParams } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
-import useContextProvider from "../hooks/useContextProvider";
 import EditProfile from "./EditProfile";
-import useFunctions from "../hooks/useFunctions";
 
 const Profile = () => {
 	const { currentUserStats, user, getUserStats } = useContextProvider();
@@ -22,7 +22,6 @@ const Profile = () => {
 
 		getAllDualPlayerStats(user?.username);
 		getUserStats(user.username);
-		setImg(user?.image);
 
 		return () => clearTimeout(timer);
 	}, []);
