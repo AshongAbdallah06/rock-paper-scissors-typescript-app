@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import Dialog from "../components/Dialog";
+import { useEffect, useRef, useState } from "react";
+import AlertComponent from "../components/AlertComponent";
+import BonusDialog from "../components/bonus/Dialog";
+import ChangeMode from "../components/ChangeMode";
 import Chat from "../components/Chat";
+import Dialog from "../components/Dialog";
+import DualPlayerStats from "../components/DualPlayerStats";
+import Footer from "../components/Footer";
+import Nav from "../components/Nav";
 import ScoreBoard from "../components/ScoreBoard";
+import SuccessAlert from "../components/SuccessAlert";
 import GameBoard from "../GameBoard";
 import useContextProvider from "../hooks/useContextProvider";
-import BonusDialog from "../components/bonus/Dialog";
-import Nav from "../components/Nav";
 import useFunctions from "../hooks/useFunctions";
-import Footer from "../components/Footer";
-import DualPlayerStats from "../components/DualPlayerStats";
-import AlertComponent from "../components/AlertComponent";
 import { MessageType } from "../Types";
-import ChangeMode from "../components/ChangeMode";
 
 const Home = () => {
 	const [chatIsShowing, setChatIsShowing] = useState<boolean>(false);
@@ -26,8 +27,10 @@ const Home = () => {
 		setAlertCounter,
 		roomID,
 		bonusState,
+		setComputerMove,
+		setPlayerMove,
 	} = useContextProvider();
-	const { getStorageItem } = useFunctions();
+	const { getStorageItem, generateRandomMove } = useFunctions();
 
 	useEffect(() => {
 		localStorage.setItem("player-mode", JSON.stringify(isOnePlayer ? "single" : "dual"));
@@ -110,6 +113,30 @@ const Home = () => {
 	const [showDualPlayerStats, setShowDualPlayerStats] = useState<boolean>(false);
 	const [showChangeModePopup, setShowChangeModePopup] = useState<boolean>(false);
 
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+	const [showAutoPlayMessage, setShowAutoPlayMessage] = useState<boolean>(false);
+	const [startAutoPlay, setStartAutoPlay] = useState<boolean>(false);
+	function autoPlay() {
+		if (startAutoPlay === false) {
+			setStartAutoPlay(true);
+			setShowAutoPlayMessage(true);
+
+			intervalRef.current = setInterval(() => {
+				generateRandomMove(setPlayerMove, bonusState);
+				generateRandomMove(setComputerMove, bonusState);
+			}, 4000);
+		} else {
+			if (intervalRef.current) {
+				setStartAutoPlay(false);
+				clearInterval(intervalRef.current);
+			}
+		}
+
+		setTimeout(() => {
+			setShowAutoPlayMessage(false);
+		}, 4000);
+	}
+
 	return (
 		<>
 			{renderRoutes && (
@@ -164,12 +191,28 @@ const Home = () => {
 						/>
 					)}
 
-					<button
-						className="rules-btn"
-						onClick={() => setIsRulesModalShow(true)}
-					>
-						RULES
-					</button>
+					{showAutoPlayMessage && (
+						<SuccessAlert
+							successTitle="Wait a minute"
+							successDescription="Starting autoplay..."
+						/>
+					)}
+
+					<div className="actions">
+						<button
+							className={`play-btn ${startAutoPlay && "stop"} `}
+							onClick={autoPlay}
+						>
+							{!startAutoPlay ? "Play" : "Stop"}
+						</button>
+
+						<button
+							className="rules-btn"
+							onClick={() => setIsRulesModalShow(true)}
+						>
+							RULES
+						</button>
+					</div>
 				</>
 			)}
 		</>

@@ -1,12 +1,12 @@
-import scissorsIcon from "../images/icon-scissors.svg";
+import Axios from "axios";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Socket } from "socket.io-client";
+import lizardIcon from "../images/icon-lizard.svg";
 import paperIcon from "../images/icon-paper.svg";
 import rockIcon from "../images/icon-rock.svg";
-import lizardIcon from "../images/icon-lizard.svg";
+import scissorsIcon from "../images/icon-scissors.svg";
 import spockIcon from "../images/icon-spock.svg";
-import { useState } from "react";
-import Axios from "axios";
 import { DualPlayerStats, GameState, Scores, User } from "../Types";
-import { Socket } from "socket.io-client";
 
 const useFunctions = () => {
 	const user: User = localStorage.getItem("user")
@@ -14,35 +14,37 @@ const useFunctions = () => {
 		: null;
 
 	// Generate the computer's move
-	type SetMoves = (move: string | null) => void;
-	const generateComputerMove = (setComputerMove: SetMoves, bonusState: boolean | "setting") => {
+	type SetMoves = Dispatch<SetStateAction<string | null>>;
+	const generateRandomMove = (setMove: SetMoves, bonusState: boolean | "setting") => {
 		const randomNumber = Math.floor(Math.random() * (bonusState ? 5 : 3));
 
 		if (!bonusState) {
 			if (randomNumber === 0) {
-				setComputerMove("r");
+				setMove("r");
 			} else if (randomNumber === 1) {
-				setComputerMove("p");
+				setMove("p");
 			} else {
-				setComputerMove("s");
+				setMove("s");
 			}
 		} else if (bonusState) {
 			if (randomNumber === 0) {
-				setComputerMove("r");
+				setMove("r");
 			} else if (randomNumber === 1) {
-				setComputerMove("p");
+				setMove("p");
 			} else if (randomNumber === 2) {
-				setComputerMove("s");
+				setMove("s");
 			} else if (randomNumber === 3) {
-				setComputerMove("l");
+				setMove("l");
 			} else {
-				setComputerMove("sp");
+				setMove("sp");
 			}
 		}
+
+		return randomNumber;
 	};
 
 	// Images for player and computer moves
-	type SetImages = (move: string | null) => void;
+	type SetImages = Dispatch<SetStateAction<string | null>>;
 	const [playerMoveImage, setPlayerMoveImage] = useState<string | null>("");
 	const [computerMoveImage, setComputerMoveImage] = useState<string | null>("");
 
@@ -297,6 +299,7 @@ const useFunctions = () => {
 		try {
 			const response = await Axios.get(
 				`https://rock-paper-scissors-app-iybf.onrender.com/api/user/stats/dual-player/${username}`
+				// `http://localhost:4001/api/user/stats/dual-player/${username}`
 			);
 			const data = response.data;
 
@@ -334,7 +337,7 @@ const useFunctions = () => {
 	};
 
 	return {
-		generateComputerMove,
+		generateRandomMove,
 		checkPlayersMoves,
 		checkOptions,
 		playerMoveImage,

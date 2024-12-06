@@ -18,7 +18,7 @@ const Context: FC<Props> = ({ children }) => {
 		setPlayerMoveImage,
 		computerMoveImage,
 		setComputerMoveImage,
-		generateComputerMove,
+		generateRandomMove,
 		getAllScores,
 		getStorageItem,
 	} = useFunctions();
@@ -159,7 +159,7 @@ const Context: FC<Props> = ({ children }) => {
 			socket.emit("move", { username: user?.username, move });
 		} else {
 			setPlayerMove(move);
-			generateComputerMove(setComputerMove, bonusState);
+			generateRandomMove(setComputerMove, bonusState);
 		}
 	};
 

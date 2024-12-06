@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 import { Request, Response } from "express";
+import { QueryResult } from "pg";
 import { Socket } from "socket.io";
 import {
 	CorsCallback,
@@ -18,7 +19,6 @@ const userRoutes = require("./routes/userRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const socketIo = require("socket.io");
 const pool = require("./db");
-import { QueryResult } from "pg";
 const { v4: uuid } = require("uuid");
 
 const app = express();
