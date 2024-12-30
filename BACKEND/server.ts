@@ -388,6 +388,17 @@ app.use("/api/user", userRoutes);
 app.use("/api/user", gameRoutes);
 
 const PORT = process.env.PORT || 4001;
-server.listen(PORT, () => {
-	console.log("Listening to port " + PORT);
-});
+
+pool.connect()
+	.then((client: any) => {
+		console.log("Connected to the database successfully!");
+
+		server.listen(PORT, () => {
+			console.log("Listening to port " + PORT);
+		});
+
+		client.release();
+	})
+	.catch((err: any) => {
+		console.error("Error connecting to the database:", err);
+	});
