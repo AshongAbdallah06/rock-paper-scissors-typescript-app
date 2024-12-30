@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 import { Request, Response } from "express";
+import { QueryResult } from "pg";
 import { Socket } from "socket.io";
 import {
 	CorsCallback,
@@ -18,7 +19,6 @@ const userRoutes = require("./routes/userRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const socketIo = require("socket.io");
 const pool = require("./db");
-import { QueryResult } from "pg";
 const { v4: uuid } = require("uuid");
 
 const app = express();
@@ -388,6 +388,17 @@ app.use("/api/user", userRoutes);
 app.use("/api/user", gameRoutes);
 
 const PORT = process.env.PORT || 4001;
-server.listen(PORT, () => {
-	console.log("Listening to port " + PORT);
-});
+
+pool.connect()
+	.then((client: any) => {
+		console.log("Connected to the database successfully!");
+
+		server.listen(PORT, () => {
+			console.log("Listening to port " + PORT);
+		});
+
+		client.release();
+	})
+	.catch((err: any) => {
+		console.error("Error connecting to the database:", err);
+	});

@@ -362,18 +362,30 @@ img[alt="scissors"] {
 	bottom: 0;
 	left: 0;
 }
-.rules-btn {
+.actions button {
+	cursor: pointer;
+	transition: all 0.15s;
+	background-color: transparent;
+	font-weight: bold;
 	position: absolute;
 	color: white;
 	border: 1px solid rgb(99, 99, 99);
 	padding: 0.5rem 1rem;
 	border-radius: 4px;
 	bottom: 1rem;
+}
+.rules-btn {
 	right: 1rem;
-	cursor: pointer;
-	transition: all 0.15s;
-	background-color: transparent;
-	font-weight: bold;
+}
+.play-btn {
+	left: 1rem;
+	text-transform: capitalize;
+}
+.play-btn:hover {
+	background-color: rgb(7, 158, 7);
+}
+.stop:hover {
+	background-color: rgb(255, 78, 78);
 }
 .rules-btn:hover {
 	background-color: rgba(0, 0, 0, 0.1);
@@ -652,4 +664,52 @@ img[alt="scissors"] {
 	background-color: hsl(189, 87%, 29%);
 	margin-top: 1rem;
 	font-weight: bold;
+}
+
+.error-alert-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	width: 25rem;
+	z-index: 50;
+	position: fixed;
+	top: 2rem;
+}
+.error-alert {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #232531;
+	border-radius: 0.5rem;
+	padding: 0.625rem;
+}
+.icon-container {
+	color: #d65563;
+	padding: 0.25rem;
+	display: flex;
+	align-items: center;
+}
+.icon {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+.alert-content {
+	display: flex;
+	gap: 0.5rem;
+}
+.alert-text {
+	font-size: 0.875rem;
+	color: #cccccc;
+	text-align: left;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+}
+.alert-title {
+	color: white;
+	font-weight: bold;
+}
+.alert-description {
+	font-size: 0.8rem;
 }

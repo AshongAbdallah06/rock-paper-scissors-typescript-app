@@ -98,7 +98,6 @@ const editProfile = async (req: Request, res: Response) => {
 		);
 
 		if (userResult.rowCount === 1) {
-			console.log(userResult.rows[0]);
 			res.status(200).json(userResult.rows[0]);
 		}
 	} catch (err) {
