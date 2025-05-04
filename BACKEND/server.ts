@@ -151,6 +151,7 @@ io.on("connect", (socket: Socket) => {
 	});
 
 	socket.on("move", async ({ username, move }: Move) => {
+		console.log("${move} by ${username}")
 		if (!roomId || !gameResult[roomId]) return;
 
 		const response: QueryResult<DualPlayerStats> = await pool.query(sqlQuery, [
